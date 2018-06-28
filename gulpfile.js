@@ -23,8 +23,7 @@ gulp.task(
         const lint = require('gulp-fasttime-lint');
 
         const src = ['test/**/*.js', 'test/**/*.mjs', '!test/node-spec-runner.mjs'];
-        const options =
-        { parserOptions: { ecmaVersion: 8, sourceType: 'module' } };
+        const options = { parserOptions: { ecmaVersion: 8, sourceType: 'module' } };
         gulp.src(src).pipe(lint(options)).on('end', callback);
     }
 );
@@ -35,9 +34,27 @@ gulp.task(
     {
         const lint = require('gulp-fasttime-lint');
 
-        const src = 'pencilfloor.mjs';
+        const src = ['pencilfloor.js', 'pencilfloor.mjs'];
         const options =
         { envs: ['browser'], parserOptions: { ecmaVersion: 8, sourceType: 'module' } };
+        gulp.src(src).pipe(lint(options)).on('end', callback);
+    }
+);
+
+gulp.task(
+    'lint:playground',
+    callback =>
+    {
+        const lint = require('gulp-fasttime-lint');
+
+        const src = 'playground/*.js';
+        const options =
+        {
+            envs: ['browser'],
+            globals: ['Pencilfloor'],
+            parserOptions: { ecmaVersion: 8 },
+            rules: { strict: ['error', 'global'] },
+        };
         gulp.src(src).pipe(lint(options)).on('end', callback);
     }
 );
@@ -53,5 +70,8 @@ gulp.task(
     }
 );
 
-gulp.task('lint', gulp.parallel('lint:gulpfile', 'lint:other', 'lint:pencilfloor'));
+gulp.task(
+    'lint',
+    gulp.parallel('lint:gulpfile', 'lint:other', 'lint:pencilfloor', 'lint:playground')
+);
 gulp.task('default', gulp.series('lint', 'test'));

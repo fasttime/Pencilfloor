@@ -1,5 +1,4 @@
-
-import Pencilfloor from '../pencilfloor.js';
+'use strict';
 
 document.addEventListener(
     'DOMContentLoaded',
