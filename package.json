@@ -1,0 +1,45 @@
+{
+  "name": "pencilfloor",
+  "version": "0.1.0",
+  "description": "Abstract animation HTML element",
+  "keywords": [
+    "abstract",
+    "animation",
+    "component",
+    "element",
+    "html",
+    "pencil",
+    "pencils"
+  ],
+  "homepage": "https://github.com/fasttime/pencilfloor",
+  "bugs": {
+    "url": "https://github.com/fasttime/pencilfloor/issues"
+  },
+  "license": "ISC",
+  "author": "Francesco Trotta <ft@fasttime.org> (https://github.com/fasttime)",
+  "files": [
+    "pencilfloor.js",
+    "pencilfloor.mjs",
+    "playground"
+  ],
+  "main": "pencilfloor.mjs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fasttime/pencilfloor.git"
+  },
+  "scripts": {
+    "build": "npm install && gulp"
+  },
+  "devDependencies": {
+    "canvas-prebuilt": "~1.6.5-prerelease.1",
+    "chai": "~4.1.2",
+    "chalk": "~2.4.1",
+    "gulp": "~4.0.0",
+    "gulp-fasttime-lint": "~0.2.10",
+    "jsdom": "~11.11.0",
+    "mocha": "~5.2.0"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  }
+}
