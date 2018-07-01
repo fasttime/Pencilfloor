@@ -437,11 +437,11 @@ describe(
                                 }
 
                                 testPencilOutOfRange(NaN, 0, 'X');
-                                testPencilOutOfRange(30, 0, 'X');
-                                testPencilOutOfRange(-30, 0, 'X');
+                                testPencilOutOfRange(100, 0, 'X');
+                                testPencilOutOfRange(-100, 0, 'X');
                                 testPencilOutOfRange(0, NaN, 'Y');
-                                testPencilOutOfRange(0, 15, 'Y');
-                                testPencilOutOfRange(0, -15, 'Y');
+                                testPencilOutOfRange(0, 100, 'Y');
+                                testPencilOutOfRange(0, -100, 'Y');
                             }
                         );
                         it(
@@ -873,37 +873,93 @@ describe(
 
         maybeDescribe(
             isOffsetParentSupported(),
-            'offset size',
+            'size',
             () =>
             {
+                function testSize(pencilfloor, expectedWidth, expectedHeight)
+                {
+                    const canvas = pencilfloor.querySelector('CANVAS');
+                    assert.strictEqual(pencilfloor.offsetWidth, expectedWidth, 'pencilfloor width');
+                    assert.strictEqual(canvas.offsetWidth, expectedWidth, 'canvas width');
+                    assert.strictEqual(
+                        pencilfloor.offsetHeight,
+                        expectedHeight,
+                        'pencilfloor height'
+                    );
+                    assert.strictEqual(canvas.offsetHeight, expectedHeight, 'canvas height');
+                }
+
                 it(
                     'default',
                     withContainer(
                         container =>
-                        {
-                            const pencilfloor = container.appendChild(Pencilfloor.create());
-                            assert.sameValue(
-                                pencilfloor.offsetWidth,
-                                Pencilfloor.DEFAULT_WIDTH,
-                                'offsetWidth'
-                            );
-                            assert.sameValue(
-                                pencilfloor.offsetHeight,
-                                Pencilfloor.DEFAULT_HEIGHT,
-                                'offsetHeight'
-                            );
-                        }
+                        testSize(
+                            container.appendChild(Pencilfloor.create()),
+                            Pencilfloor.DEFAULT_WIDTH,
+                            Pencilfloor.DEFAULT_HEIGHT
+                        )
                     )
                 );
                 it(
                     'zero',
                     withContainer(
                         container =>
+                        testSize(
+                            container.appendChild(Pencilfloor.create({ width: 0, height: 0 })),
+                            0,
+                            0
+                        )
+                    )
+                );
+                it(
+                    'horizontally shrinked',
+                    withContainer(
+                        container =>
                         {
-                            const pencilfloor =
-                            container.appendChild(Pencilfloor.create({ width: 0, height: 0 }));
-                            assert.sameValue(pencilfloor.offsetWidth, 0, 'offsetWidth');
-                            assert.sameValue(pencilfloor.offsetHeight, 0, 'offsetHeight');
+                            const EXPECTED_WIDTH = Pencilfloor.DEFAULT_WIDTH / 2;
+
+                            const pencilfloor = container.appendChild(Pencilfloor.create());
+                            pencilfloor.style.width = `${EXPECTED_WIDTH}px`;
+                            testSize(pencilfloor, EXPECTED_WIDTH, Pencilfloor.DEFAULT_HEIGHT);
+                        }
+                    )
+                );
+                it(
+                    'horizontally stretched',
+                    withContainer(
+                        container =>
+                        {
+                            const EXPECTED_WIDTH = Pencilfloor.DEFAULT_WIDTH * 2;
+
+                            const pencilfloor = container.appendChild(Pencilfloor.create());
+                            pencilfloor.style.width = `${EXPECTED_WIDTH}px`;
+                            testSize(pencilfloor, EXPECTED_WIDTH, Pencilfloor.DEFAULT_HEIGHT);
+                        }
+                    )
+                );
+                it(
+                    'vertically shrinked',
+                    withContainer(
+                        container =>
+                        {
+                            const EXPECTED_HEIGHT = Pencilfloor.DEFAULT_HEIGHT / 2;
+
+                            const pencilfloor = container.appendChild(Pencilfloor.create());
+                            pencilfloor.style.height = `${EXPECTED_HEIGHT}px`;
+                            testSize(pencilfloor, Pencilfloor.DEFAULT_WIDTH, EXPECTED_HEIGHT);
+                        }
+                    )
+                );
+                it(
+                    'vertically stretched',
+                    withContainer(
+                        container =>
+                        {
+                            const EXPECTED_HEIGHT = Pencilfloor.DEFAULT_HEIGHT * 2;
+
+                            const pencilfloor = container.appendChild(Pencilfloor.create());
+                            pencilfloor.style.height = `${EXPECTED_HEIGHT}px`;
+                            testSize(pencilfloor, Pencilfloor.DEFAULT_WIDTH, EXPECTED_HEIGHT);
                         }
                     )
                 );

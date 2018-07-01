@@ -375,15 +375,16 @@ createParams =>
     );
     base.appendChild(document.createElement('STYLE')).textContent =
     `
-    pencilfloor { background: white; display: inline-block; }
-    pencilfloor canvas { float: left; }
+    pencilfloor { background: white; display: inline-flex; }
+    pencilfloor canvas { flex: auto; min-height: 0; width: 100%; }
     pencilfloor span
     {
         -webkit-animation-duration: 5e-324s;
         -webkit-user-select: none;
         animation-name: pencilfloor-animation;
-        display: inline-block;
-        float: left;
+        display: flex;
+        flex: auto;
+        flex-direction: column;
         position: relative;
     }
     pencilfloor svg
@@ -409,6 +410,7 @@ createParams =>
     (() =>
     {
         const canvas = base.appendChild(createCanvas(width, height));
+        canvas.style.height = `${height}px`;
         const ctx = getContext2D(canvas);
         ctx.lineCap = 'round';
         ctx.setTransform(pencilSize, 0, 0, -pencilSize, width / 2, height / 2);
