@@ -387,6 +387,7 @@ createParams =>
         flex-direction: column;
         position: relative;
     }
+    pencilfloor span:focus { box-shadow: 0 0 2px 3px #3B99FC; outline: none; }
     pencilfloor svg
     {
         animation: pencilfloor-fadeout 2s;
