@@ -1068,28 +1068,69 @@ describe(
             }
         );
 
-        maybeIt(
+        maybeDescribe(
             isOffsetParentSupported(),
-            'shows overlay icon in the middle',
-            withContainer(
-                container =>
+            'overlay icon position',
+            () =>
+            {
+                function testOverlayIconPosition(pencilfloor, expectedSize)
                 {
-                    const pencilfloor = container.appendChild(Pencilfloor.create());
                     simulateMousedown(pencilfloor);
                     const rect = pencilfloor.getBoundingClientRect();
                     assert.include(
                         getOverlayIcon(pencilfloor).getBoundingClientRect(),
                         {
-                            width:  50,
-                            height: 50,
-                            top:    rect.top + 50,
-                            right:  175,
-                            bottom: rect.bottom - 50,
-                            left:   125,
+                            width:  expectedSize,
+                            height: expectedSize,
+                            left:   rect.left + (rect.width - expectedSize) / 2,
+                            top:    rect.top + (rect.height - expectedSize) / 2,
+                            right:  rect.right - (rect.width - expectedSize) / 2,
+                            bottom: rect.bottom - (rect.height - expectedSize) / 2,
                         }
                     );
                 }
-            )
+
+                it(
+                    'landscape',
+                    withContainer(
+                        container =>
+                        testOverlayIconPosition(
+                            container.appendChild(Pencilfloor.create({ width: 1024, height: 256 })),
+                            170
+                        )
+                    )
+                );
+                it(
+                    'portrait',
+                    withContainer(
+                        container =>
+                        testOverlayIconPosition(
+                            container.appendChild(Pencilfloor.create({ width: 200, height: 400 })),
+                            66
+                        )
+                    )
+                );
+                it(
+                    'shrinked in width',
+                    withContainer(
+                        container =>
+                        testOverlayIconPosition(
+                            container.appendChild(Pencilfloor.create({ width: 20 })),
+                            20
+                        )
+                    )
+                );
+                it(
+                    'shrinked in height',
+                    withContainer(
+                        container =>
+                        testOverlayIconPosition(
+                            container.appendChild(Pencilfloor.create({ height: 40 })),
+                            40
+                        )
+                    )
+                );
+            }
         );
     }
 );
