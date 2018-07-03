@@ -187,11 +187,11 @@ createParams =>
         quickness = value;
     }
 
-    const startWaitingToAnimate = () =>
-        base.addEventListener('animationstart', animationstartListener);
+    const startWaitingToAnimate =
+    () => base.addEventListener('animationstart', animationstartListener);
 
-    const stopWaitingToAnimate = () =>
-        base.removeEventListener('animationstart', animationstartListener);
+    const stopWaitingToAnimate =
+    () => base.removeEventListener('animationstart', animationstartListener);
 
     function togglePlay(showOverlayIcon)
     {
@@ -226,7 +226,7 @@ createParams =>
         {
             const { offsetWidth, offsetHeight } = base;
             const iconSize =
-            min(Math.floor(Math.max(offsetWidth / 6, offsetHeight / 6)), offsetWidth, offsetHeight);
+            min(Math.max(offsetWidth, offsetHeight) / 6 | 0, offsetWidth, offsetHeight);
             icon.setAttributeNS(null, 'width', iconSize);
             base.appendChild(icon);
         }
