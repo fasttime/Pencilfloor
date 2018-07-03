@@ -8,7 +8,8 @@ import http from 'http';
 import os from 'os';
 import path from 'path';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname).replace(/^\/(?=[^/]+:)/, '');
+const __dirname =
+path.normalize(path.dirname(new URL(import.meta.url).pathname)).replace(/^\\/, '');
 const mimeTypes =
 { '.css': 'text/css', '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript' };
 const port = 8080;

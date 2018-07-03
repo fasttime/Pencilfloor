@@ -11,7 +11,7 @@ import path from 'path';
 global.chai = chai;
 
 const currentUrl = new URL(import.meta.url);
-const __dirname = path.dirname(currentUrl.pathname);
+const __dirname = path.normalize(path.dirname(currentUrl.pathname)).replace(/^\\/, '');
 const mocha = new Mocha();
 glob(
     '*.spec.mjs',
