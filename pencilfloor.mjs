@@ -1,10 +1,11 @@
+const DBL_PI                = 2 * Math.PI;
 const DEFAULT_HEIGHT        = 150;
-const DEFAULT_QUICKNESS     = 0.025;
 const DEFAULT_INSTANT_RATE  = 0.5;
 const DEFAULT_PENCIL_SIZE   = 5;
+const DEFAULT_QUICKNESS     = 0.025;
 const DEFAULT_WIDTH         = 300;
 
-const DBL_PI = 2 * Math.PI;
+let minDistance;
 
 class Pencilfloor extends HTMLElement
 { }
@@ -52,7 +53,6 @@ createParams =>
 
     function drawStrokes()
     {
-        const MIN_DISTANCE = 0.01;
         for (const pencil of pencils)
         {
             const x0 =
@@ -65,7 +65,7 @@ createParams =>
             // 0.01. In Safari the minimum is lower but still nonzero, it's exactly 2 ** -150 * (1 +
             // Number.EPSILON) or 7.006492321624087e-46. A workaround in this case is to draw a
             // circle on the end point.
-            if (abs(x - x0) < MIN_DISTANCE && abs(y - y0) < MIN_DISTANCE)
+            if (abs(x - x0) < minDistance && abs(y - y0) < minDistance)
             {
                 ctx.fillStyle = color;
                 ctx.arc(x, y, 0.5, 0, DBL_PI);
@@ -323,12 +323,32 @@ createParams =>
                 }
             }
             tmpCtx.fillStyle = pencilParam.color;
-            tmpCtx.clearRect(0, 0, 1, 1);
             tmpCtx.fillRect(0, 0, 1, 1);
             const { data } = tmpCtx.getImageData(0, 0, 1, 1);
             const color = `rgb(${data[0]}, ${data[1]}, ${data[2]})`;
             const pencil = { x, y, dx: 0, dy: 0, color };
             pencils.push(pencil);
+            tmpCtx.clearRect(0, 0, 1, 1);
+        }
+        if (minDistance === undefined)
+        {
+            const tryDistance =
+            () =>
+            {
+                tmpCtx.lineTo(minDistance, 0.5);
+                tmpCtx.stroke();
+                const [,,, alpha] = tmpCtx.getImageData(0, 0, 1, 1).data;
+                return alpha;
+            };
+            tmpCtx.lineCap = 'round';
+            tmpCtx.moveTo(0, 0.5);
+            minDistance = 0;
+            if (!tryDistance())
+            {
+                minDistance = 2 ** -150 * (1 + Number.EPSILON);
+                if (!tryDistance())
+                    minDistance = 0.01;
+            }
         }
     }
     createParams = null;
