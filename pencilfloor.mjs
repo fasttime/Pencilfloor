@@ -195,6 +195,8 @@ createParams =>
 
     function togglePlay(showOverlayIcon)
     {
+        if (pencilCount < 2)
+            return;
         let icon;
         let evtType;
         if (paused)

@@ -32,6 +32,7 @@ function createElement(tagName)
 {
     const element = document.body.appendChild(document.createElement(tagName));
     const { style } = element;
+    style.left = '-524288px';
     style.position = 'fixed';
     style.visibility = 'hidden';
     return element;
@@ -600,12 +601,22 @@ describe(
                     () =>
                     {
                         const pencilfloor = Pencilfloor.create();
-                        pencilfloor.interactive = false;
-                        pencilfloor.play();
+                        simulateKeydown(pencilfloor);
                         assert.firesEvent(() => pencilfloor.pause(), pencilfloor, 'pause');
                         assert.isTrue(pencilfloor.paused);
                         assert.isNull(getOverlayIcon(pencilfloor));
+                    }
+                );
+                it(
+                    'does nothing if already paused',
+                    () =>
+                    {
+                        const pencilfloor = Pencilfloor.create();
+                        pencilfloor.play();
+                        simulateKeydown(pencilfloor);
                         assert.doesNotFireEvent(() => pencilfloor.pause(), pencilfloor, 'pause');
+                        assert.isTrue(pencilfloor.paused);
+                        assert.isNotNull(getOverlayIcon(pencilfloor));
                     }
                 );
             }
@@ -693,11 +704,40 @@ describe(
                     () =>
                     {
                         const pencilfloor = Pencilfloor.create();
-                        pencilfloor.interactive = false;
+                        pencilfloor.play();
+                        simulateKeydown(pencilfloor);
                         assert.firesEvent(() => pencilfloor.play(), pencilfloor, 'play');
                         assert.isFalse(pencilfloor.paused);
                         assert.isNull(getOverlayIcon(pencilfloor));
-                        assert.doesNotFireEvent(() => pencilfloor.pause(), pencilfloor, 'play');
+                    }
+                );
+                it(
+                    'does nothing if already playing',
+                    () =>
+                    {
+                        const pencilfloor = Pencilfloor.create();
+                        simulateKeydown(pencilfloor);
+                        assert.doesNotFireEvent(() => pencilfloor.play(), pencilfloor, 'play');
+                        assert.isFalse(pencilfloor.paused);
+                        assert.isNotNull(getOverlayIcon(pencilfloor));
+                    }
+                );
+                it(
+                    'does nothing if there are no pecils',
+                    () =>
+                    {
+                        const pencilfloor = Pencilfloor.create({ pencils: [] });
+                        assert.doesNotFireEvent(() => pencilfloor.play(), pencilfloor, 'play');
+                        assert.isTrue(pencilfloor.paused);
+                    }
+                );
+                it(
+                    'does nothing if there is only one pencil',
+                    () =>
+                    {
+                        const pencilfloor = Pencilfloor.create({ pencils: [{ x: 0, y: 0 }] });
+                        assert.doesNotFireEvent(() => pencilfloor.play(), pencilfloor, 'play');
+                        assert.isTrue(pencilfloor.paused);
                     }
                 );
             }
@@ -1051,11 +1091,39 @@ describe(
                     }
                 );
                 it(
-                    'does not toggle play when not interactive',
+                    'does nothing if not interactive',
                     () =>
                     {
                         const pencilfloor = Pencilfloor.create();
                         pencilfloor.interactive = false;
+                        assert.doesNotFireEvent(
+                            () => simulateKeydown(pencilfloor),
+                            pencilfloor,
+                            'play'
+                        );
+                        assert.isTrue(pencilfloor.paused);
+                        assert.isNull(getOverlayIcon(pencilfloor));
+                    }
+                );
+                it(
+                    'does nothing if there are no pencils',
+                    () =>
+                    {
+                        const pencilfloor = Pencilfloor.create({ pencils: [] });
+                        assert.doesNotFireEvent(
+                            () => simulateKeydown(pencilfloor),
+                            pencilfloor,
+                            'play'
+                        );
+                        assert.isTrue(pencilfloor.paused);
+                        assert.isNull(getOverlayIcon(pencilfloor));
+                    }
+                );
+                it(
+                    'does nothing if there is only one pencil',
+                    () =>
+                    {
+                        const pencilfloor = Pencilfloor.create({ pencils: [{ x: 0, y: 0 }] });
                         assert.doesNotFireEvent(
                             () => simulateKeydown(pencilfloor),
                             pencilfloor,
@@ -1095,8 +1163,8 @@ describe(
                     withContainer(
                         container =>
                         testOverlayIconPosition(
-                            container.appendChild(Pencilfloor.create({ width: 1024, height: 256 })),
-                            170
+                            container.appendChild(Pencilfloor.create({ width: 256, height: 64 })),
+                            42
                         )
                     )
                 );
@@ -1111,22 +1179,22 @@ describe(
                     )
                 );
                 it(
-                    'shrinked in width',
+                    'thin and long',
                     withContainer(
                         container =>
                         testOverlayIconPosition(
-                            container.appendChild(Pencilfloor.create({ width: 20 })),
-                            20
+                            container.appendChild(Pencilfloor.create({ width: 50, height: 400 })),
+                            50
                         )
                     )
                 );
                 it(
-                    'shrinked in height',
+                    'wide and short',
                     withContainer(
                         container =>
                         testOverlayIconPosition(
-                            container.appendChild(Pencilfloor.create({ height: 40 })),
-                            40
+                            container.appendChild(Pencilfloor.create({ width: 50, height: 400 })),
+                            50
                         )
                     )
                 );
