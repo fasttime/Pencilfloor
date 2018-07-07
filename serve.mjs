@@ -17,8 +17,8 @@ const port = 8080;
 http.createServer(
     (request, response) =>
     {
-        const requestUrl = request.url;
-        if (/[\\?]/.test(requestUrl))
+        const requestUrl = request.url.replace(/\?[^]*/, '');
+        if (requestUrl.includes('\\'))
         {
             response.writeHead(400);
             response.end();
