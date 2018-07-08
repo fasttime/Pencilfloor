@@ -46,6 +46,7 @@ function createInteractiveIframe()
     const promise = new Promise(resolve => setTimeout(() => resolve(iframe)));
     return promise;
 }
+
 const getBase = pencilfloor => pencilfloor.querySelector('SPAN');
 
 function getOverlayIcon(pencilfloor)
