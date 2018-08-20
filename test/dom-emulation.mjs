@@ -2,7 +2,6 @@
 
 import 'canvas-prebuilt';
 import jsdom from 'jsdom';
-import utils from 'jsdom/lib/jsdom/living/generated/utils';
 
 function areAncestorsDisplayed(node)
 {
@@ -52,7 +51,7 @@ function candidateElementForAnimationstart(element)
 
 function getDocumentFrame(document)
 {
-    const frameElement = utils.tryWrapperForImpl(document.defaultView.frameElement);
+    const { frameElement } = document.defaultView;
     return frameElement;
 }
 
@@ -102,8 +101,7 @@ function traverseCandidate(candidate, animatedElements)
     const computedStyle = getComputedStyle(candidate);
     if (computedStyle.display !== 'none')
     {
-        if (computedStyle.animationName)
-            animatedElements.push(candidate);
+        animatedElements.push(candidate);
         for (const child of candidate.children)
             traverseCandidate(child, animatedElements);
         if (candidate instanceof HTMLIFrameElement)

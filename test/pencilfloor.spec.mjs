@@ -90,6 +90,7 @@ function withContainer(...args)
 {
     const [createContainer, asyncFn] =
     args.length > 1 ? args : [() => createElement('DIV'), ...args];
+
     async function containerFn()
     {
         const container = await createContainer();
@@ -105,6 +106,7 @@ function withContainer(...args)
                 parentNode.removeChild(container);
         }
     }
+
     return containerFn;
 }
 
