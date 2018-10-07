@@ -13,7 +13,8 @@ global.chai = chai;
 const currentUrl = new URL(import.meta.url);
 const __dirname = path.normalize(path.dirname(currentUrl.pathname)).replace(/^\\/, '');
 const mocha = new Mocha();
-glob(
+glob
+(
     '*.spec.mjs',
     { cwd: __dirname, nodir: true },
     (error, files) =>
@@ -27,7 +28,8 @@ glob(
             {
                 for (const url of urls)
                     await import(url); // eslint-disable-line no-await-in-loop
-                mocha.run(
+                mocha.run
+                (
                     failures =>
                     {
                         if (failures)

@@ -91,7 +91,8 @@ createParams =>
 
     const makeFocusable = () => base.setAttribute('tabindex', '0');
 
-    function movePencil(
+    function movePencil
+    (
         pencil,
         posPropName,
         dPosPropName,
@@ -292,9 +293,8 @@ createParams =>
         }
         if (!(Symbol.iterator in pencilParams))
         {
-            throw TypeError(
-                'Parameter "pencils" must be an iterable or a function returning an iterable'
-            );
+            throw TypeError
+            ('Parameter "pencils" must be an iterable or a function returning an iterable');
         }
         const tmpCanvas = createCanvas(1, 1);
         const tmpCtx = getContext2D(tmpCanvas);
@@ -355,7 +355,8 @@ createParams =>
     const pencilCount = pencils.length;
     const pencilfloor = document.createElement('PENCILFLOOR');
     Object.setPrototypeOf(pencilfloor, Pencilfloor.prototype);
-    Object.defineProperties(
+    Object.defineProperties
+    (
         pencilfloor,
         {
             height: defineValueProperty(height),
@@ -373,7 +374,8 @@ createParams =>
     );
     const base = pencilfloor.appendChild(document.createElement('SPAN'));
     makeFocusable();
-    base.addEventListener(
+    base.addEventListener
+    (
         'keydown',
         evt =>
         {
@@ -384,7 +386,8 @@ createParams =>
             }
         }
     );
-    base.addEventListener(
+    base.addEventListener
+    (
         'mousedown',
         evt =>
         {
@@ -506,7 +509,8 @@ function toSize(value, defaultValue)
 const { abs, min } = Math;
 
 export default
-Object.defineProperties(
+Object.defineProperties
+(
     Pencilfloor,
     {
         DEFAULT_HEIGHT:         { value: DEFAULT_HEIGHT },

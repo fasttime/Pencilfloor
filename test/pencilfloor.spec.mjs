@@ -8,13 +8,14 @@ const { assert } = chai;
 function captureInstant(pencilfloor)
 {
     const promise =
-    new Promise(
+    new Promise
+    (
         resolve =>
         {
-            requestAnimationFrame(
-                () => requestAnimationFrame(() => requestAnimationFrame(() => resolve(null)))
-            );
-            pencilfloor.addEventListener(
+            requestAnimationFrame
+            (() => requestAnimationFrame(() => requestAnimationFrame(() => resolve(null))));
+            pencilfloor.addEventListener
+            (
                 'instant',
                 () =>
                 {
@@ -117,7 +118,8 @@ function withContainer(...args)
     function captureEvent(fn, pencilfloor, evtType)
     {
         let evt = null;
-        pencilfloor.addEventListener(
+        pencilfloor.addEventListener
+        (
             evtType,
             evtFired =>
             {
@@ -178,12 +180,8 @@ function withContainer(...args)
     (actual, expected, msg) =>
     {
         new Assertion(actual, msg, assert.sameValue, true)
-        .assert(
-            Object.is(actual, expected),
-            'expected #{act} to equal #{exp}',
-            undefined,
-            expected
-        );
+        .assert
+        (Object.is(actual, expected), 'expected #{act} to equal #{exp}', undefined, expected);
     };
 
     assert.setterSets =
@@ -192,7 +190,8 @@ function withContainer(...args)
         obj[propName] = value;
         const actual = obj[propName];
         new Assertion(undefined, msg, assert.setterSets, true)
-        .assert(
+        .assert
+        (
             Object.is(actual, expected),
             `attempting to set property ${String(propName)} to ${objDisplay(value)} unexpectedly ` +
             'set its value to #{act} instead of #{exp}',
@@ -219,7 +218,8 @@ function withContainer(...args)
         const subject = `attempting to set property ${String(propName)} to ${objDisplay(value)}`;
         const newValue = obj[propName];
         assertion
-        .assert(
+        .assert
+        (
             eql(newValue, oldValue),
             `${subject} unexpectedly changed its value from #{exp} to #{act}`,
             undefined,
@@ -230,16 +230,18 @@ function withContainer(...args)
             return;
         const actualMsg =
         error === undefined ? 'no error was thrown' : `${objDisplay(error)} was thrown`;
-        assertion
-        .assert(false, `${subject} was expected to throw a ${errorType.name}, but ${actualMsg}`);
+        assertion.assert
+        (false, `${subject} was expected to throw a ${errorType.name}, but ${actualMsg}`);
     };
 }
 
-describe(
+describe
+(
     'Pencilfloor',
     () =>
     {
-        it(
+        it
+        (
             'default value properties',
             () =>
             {
@@ -259,11 +261,13 @@ describe(
             }
         );
 
-        describe(
+        describe
+        (
             'create',
             () =>
             {
-                it(
+                it
+                (
                     'has expected properties',
                     () =>
                     {
@@ -273,7 +277,8 @@ describe(
                     }
                 );
 
-                describe(
+                describe
+                (
                     'width',
                     () =>
                     {
@@ -285,7 +290,8 @@ describe(
                             assert.sameValue(pencilfloor.width, expected, message);
                         }
 
-                        it(
+                        it
+                        (
                             'is DEFAULT_WIDTH by default',
                             () =>
                             {
@@ -295,7 +301,8 @@ describe(
                                 testWidth({ width: 0x100000000 - 1 }, DEFAULT_WIDTH);
                             }
                         );
-                        it(
+                        it
+                        (
                             'is converted into a 32-bit positive integer',
                             () =>
                             {
@@ -308,7 +315,8 @@ describe(
                     }
                 );
 
-                describe(
+                describe
+                (
                     'height',
                     () =>
                     {
@@ -320,7 +328,8 @@ describe(
                             assert.sameValue(pencilfloor.height, expected, message);
                         }
 
-                        it(
+                        it
+                        (
                             'is DEFAULT_HEIGHT by default',
                             () =>
                             {
@@ -330,7 +339,8 @@ describe(
                                 testHeight({ height: 0x100000000 - 1 }, DEFAULT_HEIGHT);
                             }
                         );
-                        it(
+                        it
+                        (
                             'is converted into a 32-bit positive integer',
                             () =>
                             {
@@ -343,7 +353,8 @@ describe(
                     }
                 );
 
-                describe(
+                describe
+                (
                     'pencilSize',
                     () =>
                     {
@@ -355,7 +366,8 @@ describe(
                             assert.sameValue(pencilfloor.pencilSize, expected, message);
                         }
 
-                        it(
+                        it
+                        (
                             'is DEFAULT_PENCIL_SIZE by default',
                             () =>
                             {
@@ -365,7 +377,8 @@ describe(
                                 testPencilSize({ pencilSize: 'foo' }, DEFAULT_PENCIL_SIZE);
                             }
                         );
-                        it(
+                        it
+                        (
                             'is not negative',
                             () =>
                             {
@@ -374,7 +387,8 @@ describe(
                                 testPencilSize({ pencilSize: -Infinity }, 0);
                             }
                         );
-                        it(
+                        it
+                        (
                             'is not larger than half the width',
                             () =>
                             {
@@ -383,7 +397,8 @@ describe(
                                 testPencilSize({ width: 0 }, 0);
                             }
                         );
-                        it(
+                        it
+                        (
                             'is not larger than half the height',
                             () =>
                             {
@@ -395,21 +410,25 @@ describe(
                     }
                 );
 
-                describe(
+                describe
+                (
                     'pencils',
                     () =>
                     {
-                        it(
+                        it
+                        (
                             'have default colors',
                             () =>
                             {
-                                assert.deepEqual(
+                                assert.deepEqual
+                                (
                                     Pencilfloor.create().pencils.map(({ color }) => color),
                                     ['rgb(255, 128, 0)', 'rgb(0, 255, 0)', 'rgb(128, 0, 255)']
                                 );
                             }
                         );
-                        it(
+                        it
+                        (
                             'have no alpha channel',
                             () =>
                             {
@@ -420,7 +439,7 @@ describe(
                                         { color: 'rgba(255,0,0,0.5)', x: 0, y: 0 },
                                         { color: 'transparent', x: 1, y: 0 },
                                         { color: 'hsla(120,100%,50%,0.023529411)', x: 2, y: 0 },
-                                    ]
+                                    ],
                                 };
                                 const { pencils } = Pencilfloor.create(createParams);
                                 assert.equal(pencils[0].color, 'rgb(255, 0, 0)');
@@ -428,13 +447,15 @@ describe(
                                 assert.equal(pencils[2].color, 'rgb(0, 255, 0)');
                             }
                         );
-                        it(
+                        it
+                        (
                             'must lie withing the allowed ranges',
                             () =>
                             {
                                 function testPencilOutOfRange(x, y, coordinate)
                                 {
-                                    assert.throws(
+                                    assert.throws
+                                    (
                                         () => Pencilfloor.create({ pencils: [{ x, y }] }),
                                         `Pencil ${coordinate}-position `
                                     );
@@ -448,14 +469,15 @@ describe(
                                 testPencilOutOfRange(0, -100, 'Y');
                             }
                         );
-                        it(
+                        it
+                        (
                             'cannot overlap',
                             () =>
                             {
-                                assert.throws(
-                                    () => Pencilfloor.create(
-                                        { pencils: [{ x: 0, y: 0 }, { x: 0.5, y: 0.5 }] }
-                                    ),
+                                assert.throws
+                                (
+                                    () => Pencilfloor.create
+                                    ({ pencils: [{ x: 0, y: 0 }, { x: 0.5, y: 0.5 }] }),
                                     /Pencils .* and .* overlap/
                                 );
                             }
@@ -465,23 +487,24 @@ describe(
             }
         );
 
-        describe(
+        describe
+        (
             'defaultArrangePencils',
             () =>
             {
-                it(
+                it
+                (
                     'has expected properties',
                     () =>
                     {
                         const { defaultArrangePencils } = Pencilfloor;
-                        assert.include(
-                            defaultArrangePencils,
-                            { length: 1, name: 'defaultArrangePencils' }
-                        );
+                        assert.include
+                        (defaultArrangePencils, { length: 1, name: 'defaultArrangePencils' });
                         assert.isNotConstructible(defaultArrangePencils);
                     }
                 );
-                it(
+                it
+                (
                     'returns an iterable of pencils',
                     () =>
                     {
@@ -505,13 +528,13 @@ describe(
                         assert.closeTo(distance(pencils[2], pencils[0]), 4 * 3 ** 0.5, 1e-14);
                     }
                 );
-                it(
+                it
+                (
                     'returns an empty iterable',
                     () =>
                     {
                         const testEmptyArrangement =
                         rect => assert.isEmpty([...Pencilfloor.defaultArrangePencils(rect)]);
-
                         testEmptyArrangement({ minX: -3.9, maxX: 10, minY: -10, maxY: 10 });
                         testEmptyArrangement({ minX: NaN, maxX: 10, minY: -10, maxY: 10 });
                         testEmptyArrangement({ minX: -10, maxX: 3.9, minY: -10, maxY: 10 });
@@ -529,17 +552,21 @@ describe(
 
         it('height', () => assert.setterThrows(Pencilfloor.create(), 'height', 0, TypeError));
 
-        describe(
+        describe
+        (
             'instant',
             () =>
             {
-                it(
+                it
+                (
                     'is read-only',
                     () => assert.setterThrows(Pencilfloor.create(), 'instant', 0, TypeError)
                 );
-                it(
+                it
+                (
                     'is updated every instant',
-                    withContainer(
+                    withContainer
+                    (
                         async container =>
                         {
                             const pencilfloor = container.appendChild(Pencilfloor.create());
@@ -551,7 +578,8 @@ describe(
             }
         );
 
-        it(
+        it
+        (
             'instantRate',
             () =>
             {
@@ -572,7 +600,8 @@ describe(
             }
         );
 
-        it(
+        it
+        (
             'interactive',
             () =>
             {
@@ -586,11 +615,13 @@ describe(
             }
         );
 
-        describe(
+        describe
+        (
             'pause',
             () =>
             {
-                it(
+                it
+                (
                     'has expected properties',
                     () =>
                     {
@@ -599,7 +630,8 @@ describe(
                         assert.isNotConstructible(pause);
                     }
                 );
-                it(
+                it
+                (
                     'works',
                     () =>
                     {
@@ -610,7 +642,8 @@ describe(
                         assert.isNull(getOverlayIcon(pencilfloor));
                     }
                 );
-                it(
+                it
+                (
                     'does nothing if already paused',
                     () =>
                     {
@@ -625,7 +658,8 @@ describe(
             }
         );
 
-        it(
+        it
+        (
             'paused',
             () =>
             {
@@ -634,36 +668,40 @@ describe(
             }
         );
 
-        it(
-            'pencilSize',
-            () => assert.setterThrows(Pencilfloor.create(), 'pencilSize', 0, TypeError)
-        );
+        it
+        ('pencilSize', () => assert.setterThrows(Pencilfloor.create(), 'pencilSize', 0, TypeError));
 
-        describe(
+        describe
+        (
             'pencils',
             () =>
             {
-                it(
+                it
+                (
                     'is read-only',
                     () => assert.setterThrows(Pencilfloor.create(), 'pencils', [], TypeError)
                 );
-                it(
+                it
+                (
                     'gets new objects on every access',
                     () =>
                     {
                         const pencilfloor = Pencilfloor.create();
                         const pencils1 = pencilfloor.pencils;
                         const pencils2 = pencilfloor.pencils;
-                        assert(
+                        assert
+                        (
                             new Set([...pencils1, ...pencils2]).size ===
                             pencils1.length + pencils2.length,
                             'expected arrays to be disjoint'
                         );
                     }
                 );
-                it(
+                it
+                (
                     'position is updated every instant',
-                    withContainer(
+                    withContainer
+                    (
                         async container =>
                         {
                             const createParams =
@@ -672,7 +710,7 @@ describe(
                                 [
                                     { x: 1 / 4 * (1 + Number.EPSILON), y: 3 ** 0.5 / 4 },
                                     { x: -1 / 4 * (1 + Number.EPSILON), y: -(3 ** 0.5) / 4 },
-                                ]
+                                ],
                             };
                             const pencilfloor =
                             container.appendChild(Pencilfloor.create(createParams));
@@ -689,11 +727,13 @@ describe(
             }
         );
 
-        describe(
+        describe
+        (
             'play',
             () =>
             {
-                it(
+                it
+                (
                     'has expected properties',
                     () =>
                     {
@@ -702,7 +742,8 @@ describe(
                         assert.isNotConstructible(play);
                     }
                 );
-                it(
+                it
+                (
                     'works',
                     () =>
                     {
@@ -714,7 +755,8 @@ describe(
                         assert.isNull(getOverlayIcon(pencilfloor));
                     }
                 );
-                it(
+                it
+                (
                     'does nothing if already playing',
                     () =>
                     {
@@ -725,7 +767,8 @@ describe(
                         assert.isNotNull(getOverlayIcon(pencilfloor));
                     }
                 );
-                it(
+                it
+                (
                     'does nothing if there are no pecils',
                     () =>
                     {
@@ -734,7 +777,8 @@ describe(
                         assert.isTrue(pencilfloor.paused);
                     }
                 );
-                it(
+                it
+                (
                     'does nothing if there is only one pencil',
                     () =>
                     {
@@ -746,7 +790,8 @@ describe(
             }
         );
 
-        it(
+        it
+        (
             'quickness',
             () =>
             {
@@ -769,13 +814,16 @@ describe(
 
         it('width', () => assert.setterThrows(Pencilfloor.create(), 'width', 0, TypeError));
 
-        describe(
+        describe
+        (
             'instant event',
             () =>
             {
-                it(
+                it
+                (
                     'only fires when a pencilfloor is playing',
-                    withContainer(
+                    withContainer
+                    (
                         async container =>
                         {
                             const pencilfloor = container.appendChild(Pencilfloor.create());
@@ -787,9 +835,11 @@ describe(
                         }
                     )
                 );
-                it(
+                it
+                (
                     'only fires when a pencilfloor is attached',
-                    withContainer(
+                    withContainer
+                    (
                         async container =>
                         {
                             const pencilfloor = Pencilfloor.create();
@@ -804,9 +854,11 @@ describe(
                         }
                     )
                 );
-                it(
+                it
+                (
                     'only fires when a pencilfloor is displayed',
-                    withContainer(
+                    withContainer
+                    (
                         async container =>
                         {
                             const pencilfloor = container.appendChild(Pencilfloor.create());
@@ -821,9 +873,11 @@ describe(
                         }
                     )
                 );
-                it(
+                it
+                (
                     'only fires when DOM ancestors are displayed',
-                    withContainer(
+                    withContainer
+                    (
                         async container =>
                         {
                             const { style } = container;
@@ -831,25 +885,23 @@ describe(
                             const pencilfloor = container.appendChild(Pencilfloor.create());
                             pencilfloor.play();
                             await
-                            assert.doesNotFireInstantEvent(
-                                pencilfloor,
-                                'before displaying ancestors'
-                            );
+                            assert.doesNotFireInstantEvent
+                            (pencilfloor, 'before displaying ancestors');
                             style.display = '';
                             await
                             assert.firesInstantEvent(pencilfloor, 'after displaying ancestors');
                             style.display = 'none';
                             await
-                            assert.doesNotFireInstantEvent(
-                                pencilfloor,
-                                'after undisplaying ancestors'
-                            );
+                            assert.doesNotFireInstantEvent
+                            (pencilfloor, 'after undisplaying ancestors');
                         }
                     )
                 );
-                it(
+                it
+                (
                     'is not fired when instantRate is 0',
-                    withContainer(
+                    withContainer
+                    (
                         async container =>
                         {
                             const pencilfloor = container.appendChild(Pencilfloor.create());
@@ -859,9 +911,11 @@ describe(
                         }
                     )
                 );
-                it(
+                it
+                (
                     'is fired inside an iframe',
-                    withContainer(
+                    withContainer
+                    (
                         createInteractiveIframe,
                         async iframe =>
                         {
@@ -872,9 +926,11 @@ describe(
                         }
                     )
                 );
-                it(
+                it
+                (
                     'is not fired inside a detached iframe',
-                    withContainer(
+                    withContainer
+                    (
                         createInteractiveIframe,
                         async iframe =>
                         {
@@ -886,7 +942,8 @@ describe(
                         }
                     )
                 );
-                maybeIt(
+                maybeIt
+                (
                     (() =>
                     {
                         const { body } = document;
@@ -899,7 +956,8 @@ describe(
                     }
                     )(),
                     'is not fired inside an undisplayed iframe',
-                    withContainer(
+                    withContainer
+                    (
                         createInteractiveIframe,
                         async iframe =>
                         {
@@ -914,7 +972,8 @@ describe(
             }
         );
 
-        maybeDescribe(
+        maybeDescribe
+        (
             isOffsetParentSupported(),
             'size',
             () =>
@@ -924,39 +983,44 @@ describe(
                     const canvas = pencilfloor.querySelector('CANVAS');
                     assert.strictEqual(pencilfloor.offsetWidth, expectedWidth, 'pencilfloor width');
                     assert.strictEqual(canvas.offsetWidth, expectedWidth, 'canvas width');
-                    assert.strictEqual(
-                        pencilfloor.offsetHeight,
-                        expectedHeight,
-                        'pencilfloor height'
-                    );
+                    assert.strictEqual
+                    (pencilfloor.offsetHeight, expectedHeight, 'pencilfloor height');
                     assert.strictEqual(canvas.offsetHeight, expectedHeight, 'canvas height');
                 }
 
-                it(
+                it
+                (
                     'default',
-                    withContainer(
+                    withContainer
+                    (
                         container =>
-                        testSize(
+                        testSize
+                        (
                             container.appendChild(Pencilfloor.create()),
                             Pencilfloor.DEFAULT_WIDTH,
                             Pencilfloor.DEFAULT_HEIGHT
                         )
                     )
                 );
-                it(
+                it
+                (
                     'zero',
-                    withContainer(
+                    withContainer
+                    (
                         container =>
-                        testSize(
+                        testSize
+                        (
                             container.appendChild(Pencilfloor.create({ width: 0, height: 0 })),
                             0,
                             0
                         )
                     )
                 );
-                it(
+                it
+                (
                     'horizontally shrinked',
-                    withContainer(
+                    withContainer
+                    (
                         container =>
                         {
                             const EXPECTED_WIDTH = Pencilfloor.DEFAULT_WIDTH / 2;
@@ -967,9 +1031,11 @@ describe(
                         }
                     )
                 );
-                it(
+                it
+                (
                     'horizontally stretched',
-                    withContainer(
+                    withContainer
+                    (
                         container =>
                         {
                             const EXPECTED_WIDTH = Pencilfloor.DEFAULT_WIDTH * 2;
@@ -980,9 +1046,11 @@ describe(
                         }
                     )
                 );
-                it(
+                it
+                (
                     'vertically shrinked',
-                    withContainer(
+                    withContainer
+                    (
                         container =>
                         {
                             const EXPECTED_HEIGHT = Pencilfloor.DEFAULT_HEIGHT / 2;
@@ -993,9 +1061,11 @@ describe(
                         }
                     )
                 );
-                it(
+                it
+                (
                     'vertically stretched',
-                    withContainer(
+                    withContainer
+                    (
                         container =>
                         {
                             const EXPECTED_HEIGHT = Pencilfloor.DEFAULT_HEIGHT * 2;
@@ -1009,54 +1079,49 @@ describe(
             }
         );
 
-        describe(
+        describe
+        (
             'left click',
             () =>
             {
-                it(
+                it
+                (
                     'toggles from paused to playing',
                     () =>
                     {
                         const pencilfloor = Pencilfloor.create();
-                        assert.firesEvent(
-                            () => simulateMousedown(pencilfloor),
-                            pencilfloor,
-                            'play'
-                        );
+                        assert.firesEvent
+                        (() => simulateMousedown(pencilfloor), pencilfloor, 'play');
                         assert.isFalse(pencilfloor.paused);
                         const icon = getOverlayIcon(pencilfloor);
                         assert.isNotNull(icon);
                         assert.equal(icon.type, 'play');
                     }
                 );
-                it(
+                it
+                (
                     'toggles from playing to paused',
                     () =>
                     {
                         const pencilfloor = Pencilfloor.create();
                         pencilfloor.play();
-                        assert.firesEvent(
-                            () => simulateMousedown(pencilfloor),
-                            pencilfloor,
-                            'pause'
-                        );
+                        assert.firesEvent
+                        (() => simulateMousedown(pencilfloor), pencilfloor, 'pause');
                         assert.isTrue(pencilfloor.paused);
                         const icon = getOverlayIcon(pencilfloor);
                         assert.isNotNull(icon);
                         assert.equal(icon.type, 'pause');
                     }
                 );
-                it(
+                it
+                (
                     'does not toggle play when not interactive',
                     () =>
                     {
                         const pencilfloor = Pencilfloor.create();
                         pencilfloor.interactive = false;
-                        assert.doesNotFireEvent(
-                            () => simulateMousedown(pencilfloor),
-                            pencilfloor,
-                            'play'
-                        );
+                        assert.doesNotFireEvent
+                        (() => simulateMousedown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
                         assert.isNull(getOverlayIcon(pencilfloor));
                     }
@@ -1064,11 +1129,13 @@ describe(
             }
         );
 
-        describe(
+        describe
+        (
             'space key',
             () =>
             {
-                it(
+                it
+                (
                     'toggles from paused to playing',
                     () =>
                     {
@@ -1080,7 +1147,8 @@ describe(
                         assert.equal(icon.type, 'play');
                     }
                 );
-                it(
+                it
+                (
                     'toggles from playing to paused',
                     () =>
                     {
@@ -1093,45 +1161,39 @@ describe(
                         assert.equal(icon.type, 'pause');
                     }
                 );
-                it(
+                it
+                (
                     'does nothing if not interactive',
                     () =>
                     {
                         const pencilfloor = Pencilfloor.create();
                         pencilfloor.interactive = false;
-                        assert.doesNotFireEvent(
-                            () => simulateKeydown(pencilfloor),
-                            pencilfloor,
-                            'play'
-                        );
+                        assert.doesNotFireEvent
+                        (() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
                         assert.isNull(getOverlayIcon(pencilfloor));
                     }
                 );
-                it(
+                it
+                (
                     'does nothing if there are no pencils',
                     () =>
                     {
                         const pencilfloor = Pencilfloor.create({ pencils: [] });
-                        assert.doesNotFireEvent(
-                            () => simulateKeydown(pencilfloor),
-                            pencilfloor,
-                            'play'
-                        );
+                        assert.doesNotFireEvent
+                        (() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
                         assert.isNull(getOverlayIcon(pencilfloor));
                     }
                 );
-                it(
+                it
+                (
                     'does nothing if there is only one pencil',
                     () =>
                     {
                         const pencilfloor = Pencilfloor.create({ pencils: [{ x: 0, y: 0 }] });
-                        assert.doesNotFireEvent(
-                            () => simulateKeydown(pencilfloor),
-                            pencilfloor,
-                            'play'
-                        );
+                        assert.doesNotFireEvent
+                        (() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
                         assert.isNull(getOverlayIcon(pencilfloor));
                     }
@@ -1139,7 +1201,8 @@ describe(
             }
         );
 
-        maybeDescribe(
+        maybeDescribe
+        (
             isOffsetParentSupported(),
             'overlay icon position',
             () =>
@@ -1148,7 +1211,8 @@ describe(
                 {
                     simulateMousedown(pencilfloor);
                     const rect = pencilfloor.getBoundingClientRect();
-                    assert.include(
+                    assert.include
+                    (
                         getOverlayIcon(pencilfloor).getBoundingClientRect(),
                         {
                             width:  expectedSize,
@@ -1161,44 +1225,44 @@ describe(
                     );
                 }
 
-                it(
+                it
+                (
                     'landscape',
-                    withContainer(
+                    withContainer
+                    (
                         container =>
-                        testOverlayIconPosition(
-                            container.appendChild(Pencilfloor.create({ width: 256, height: 64 })),
-                            42
-                        )
+                        testOverlayIconPosition
+                        (container.appendChild(Pencilfloor.create({ width: 256, height: 64 })), 42)
                     )
                 );
-                it(
+                it
+                (
                     'portrait',
-                    withContainer(
+                    withContainer
+                    (
                         container =>
-                        testOverlayIconPosition(
-                            container.appendChild(Pencilfloor.create({ width: 200, height: 400 })),
-                            66
-                        )
+                        testOverlayIconPosition
+                        (container.appendChild(Pencilfloor.create({ width: 200, height: 400 })), 66)
                     )
                 );
-                it(
+                it
+                (
                     'thin and long',
-                    withContainer(
+                    withContainer
+                    (
                         container =>
-                        testOverlayIconPosition(
-                            container.appendChild(Pencilfloor.create({ width: 50, height: 400 })),
-                            50
-                        )
+                        testOverlayIconPosition
+                        (container.appendChild(Pencilfloor.create({ width: 50, height: 400 })), 50)
                     )
                 );
-                it(
+                it
+                (
                     'wide and short',
-                    withContainer(
+                    withContainer
+                    (
                         container =>
-                        testOverlayIconPosition(
-                            container.appendChild(Pencilfloor.create({ width: 50, height: 400 })),
-                            50
-                        )
+                        testOverlayIconPosition
+                        (container.appendChild(Pencilfloor.create({ width: 50, height: 400 })), 50)
                     )
                 );
             }

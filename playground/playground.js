@@ -1,6 +1,7 @@
 'use strict';
 
-document.addEventListener(
+document.addEventListener
+(
     'DOMContentLoaded',
     () =>
     {

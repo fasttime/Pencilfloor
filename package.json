@@ -20,7 +20,8 @@
   "files": [
     "pencilfloor.js",
     "pencilfloor.mjs",
-    "playground"
+    "playground",
+    "!.*"
   ],
   "main": "pencilfloor.mjs",
   "repository": {
@@ -32,11 +33,11 @@
   },
   "devDependencies": {
     "canvas-prebuilt": "~1.6.5-prerelease.1",
-    "chai": "~4.1.2",
+    "chai": "~4.2.0",
     "chalk": "~2.4.1",
     "gulp": "~4.0.0",
-    "gulp-fasttime-lint": "~0.3.0",
-    "jsdom": "~12.0.0",
+    "gulp-fasttime-lint": "~0.4.1",
+    "jsdom": "~12.1.0",
     "mocha": "~5.2.0"
   },
   "engines": {

@@ -82,10 +82,12 @@ function processCandidates()
     {
         for (const candidate of candidateSet)
         {
-            if (
+            if
+            (
                 !candidate.isConnected ||
                 isCandidateDescendant(candidate) ||
-                !areAncestorsDisplayed(candidate))
+                !areAncestorsDisplayed(candidate)
+            )
                 candidateSet.delete(candidate);
             else
                 traverseCandidate(candidate, animatedElements);
@@ -164,9 +166,7 @@ Element.prototype.getClientRects =
 function ()
 {
     const list =
-    this.isConnected &&
-    areAncestorsDisplayed(this) &&
-    getComputedStyle(this).display !== 'none' ?
+    this.isConnected && areAncestorsDisplayed(this) && getComputedStyle(this).display !== 'none' ?
     [{ }] :
     [];
     return list;

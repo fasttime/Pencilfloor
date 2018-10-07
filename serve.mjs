@@ -14,7 +14,8 @@ const mimeTypes =
 { '.css': 'text/css', '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript' };
 const port = 8080;
 
-http.createServer(
+http.createServer
+(
     (request, response) =>
     {
         const requestUrl = request.url.replace(/\?[^]*/, '');
@@ -26,7 +27,8 @@ http.createServer(
         }
         const pathname = path.join(__dirname, requestUrl);
         const stream = fs.createReadStream(pathname);
-        stream.on(
+        stream.on
+        (
             'open',
             () =>
             {
@@ -40,7 +42,8 @@ http.createServer(
                 stream.pipe(response);
             }
         );
-        stream.on(
+        stream.on
+        (
             'error',
             () =>
             {
@@ -49,7 +52,8 @@ http.createServer(
             }
         );
     }
-).listen(port);
+)
+.listen(port);
 
 {
     const ip = getIP();
@@ -58,7 +62,8 @@ http.createServer(
         const baseUrl = `http://${getIP()}:${port}`;
         const urlInfo =
         (name, path) => `\n${chalk.bold(name)}\n${chalk.blue(`${baseUrl}${path}`)}\n`;
-        console.log(
+        console.log
+        (
             urlInfo('Playground URL', '/playground/playground.html') +
             urlInfo('Spec Runner URL', '/test/spec-runner.html')
         );
