@@ -2,4 +2,4 @@
 
 Abstract animation HTML element
 
-[**Watch it now**](https://rawgit.com/fasttime/Pencilfloor/master/playground/playground.html)
+[**Watch it now**](https://gitcdn.xyz/repo/fasttime/Pencilfloor/master/playground/playground.html)
