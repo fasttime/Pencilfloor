@@ -260,7 +260,7 @@ createParams =>
         let pencilSize = Number(createParams.pencilSize);
         if (pencilSize <= 0)
             return 0;
-        if (Number.isNaN(pencilSize))
+        if (pencilSize !== pencilSize)
             pencilSize = DEFAULT_PENCIL_SIZE;
         pencilSize = min(pencilSize, width / 2, height / 2);
         return pencilSize;

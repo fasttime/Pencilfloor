@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-import 'canvas-prebuilt';
+import 'canvas';
 import jsdom from 'jsdom';
 
 function areAncestorsDisplayed(node)

@@ -1,70 +1,43 @@
-/* eslint-env node */
-
 'use strict';
 
-const gulp = require('gulp');
+const { series, task } = require('gulp');
 
-gulp.task
+task
 (
-    'lint:gulpfile',
-    callback =>
+    'lint',
+    () =>
     {
         const lint = require('gulp-fasttime-lint');
 
-        gulp
-        .src('gulpfile.js')
-        .pipe(lint({ parserOptions: { ecmaVersion: 8 } }))
-        .on('end', callback);
+        const stream =
+        lint
+        (
+            {
+                src: 'gulpfile.js',
+                envs: ['node'],
+                parserOptions: { ecmaVersion: 8 },
+            },
+            {
+                src: ['test/**/*.js', 'test/**/*.mjs', '!test/node-spec-runner.mjs'],
+                parserOptions: { ecmaVersion: 8, sourceType: 'module' },
+            },
+            {
+                src: ['pencilfloor.js', 'pencilfloor.mjs'],
+                envs: ['browser'],
+                parserOptions: { ecmaVersion: 8, sourceType: 'module' },
+            },
+            {
+                src: 'playground/*.js',
+                envs: ['browser'],
+                globals: ['Pencilfloor'],
+                parserOptions: { ecmaVersion: 8 },
+            },
+        );
+        return stream;
     }
 );
 
-gulp.task
-(
-    'lint:other',
-    callback =>
-    {
-        const lint = require('gulp-fasttime-lint');
-
-        gulp
-        .src(['test/**/*.js', 'test/**/*.mjs', '!test/node-spec-runner.mjs'])
-        .pipe(lint({ parserOptions: { ecmaVersion: 8, sourceType: 'module' } }))
-        .on('end', callback);
-    }
-);
-
-gulp.task
-(
-    'lint:pencilfloor',
-    callback =>
-    {
-        const lint = require('gulp-fasttime-lint');
-
-        gulp
-        .src(['pencilfloor.js', 'pencilfloor.mjs'])
-        .pipe(lint({ envs: ['browser'], parserOptions: { ecmaVersion: 8, sourceType: 'module' } }))
-        .on('end', callback);
-    }
-);
-
-gulp.task
-(
-    'lint:playground',
-    callback =>
-    {
-        const lint = require('gulp-fasttime-lint');
-
-        const lintOpts =
-        {
-            envs: ['browser'],
-            globals: ['Pencilfloor'],
-            parserOptions: { ecmaVersion: 8 },
-            rules: { strict: ['error', 'global'] },
-        };
-        gulp.src('playground/*.js').pipe(lint(lintOpts)).on('end', callback);
-    }
-);
-
-gulp.task
+task
 (
     'test',
     callback =>
@@ -76,6 +49,4 @@ gulp.task
     }
 );
 
-gulp.task
-('lint', gulp.parallel('lint:gulpfile', 'lint:other', 'lint:pencilfloor', 'lint:playground'));
-gulp.task('default', gulp.series('lint', 'test'));
+task('default', series('lint', 'test'));
