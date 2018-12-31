@@ -22,9 +22,9 @@ function captureInstant(pencilfloor)
                     const { instant, pencils } = pencilfloor;
                     resolve({ instant, pencils });
                 },
-                { once: true }
+                { once: true },
             );
-        }
+        },
     );
     return promise;
 }
@@ -125,7 +125,7 @@ function withContainer(...args)
             {
                 evt = evtFired;
             },
-            { once: true }
+            { once: true },
         );
         fn();
         return evt;
@@ -197,7 +197,7 @@ function withContainer(...args)
             'set its value to #{act} instead of #{exp}',
             undefined,
             expected,
-            actual
+            actual,
         );
     };
 
@@ -224,7 +224,7 @@ function withContainer(...args)
             `${subject} unexpectedly changed its value from #{exp} to #{act}`,
             undefined,
             oldValue,
-            newValue
+            newValue,
         );
         if (error instanceof errorType)
             return;
@@ -258,7 +258,7 @@ describe
                 test('DEFAULT_PENCIL_SIZE', 5);
                 test('DEFAULT_QUICKNESS', 0.025);
                 test('DEFAULT_WIDTH', 300);
-            }
+            },
         );
 
         describe
@@ -274,7 +274,7 @@ describe
                         const { create } = Pencilfloor;
                         assert.include(create, { length: 1, name: 'create' });
                         assert.isNotConstructible(create);
-                    }
+                    },
                 );
 
                 describe
@@ -299,7 +299,7 @@ describe
                                 testWidth(undefined, DEFAULT_WIDTH);
                                 testWidth({ width: -1 }, DEFAULT_WIDTH);
                                 testWidth({ width: 0x100000000 - 1 }, DEFAULT_WIDTH);
-                            }
+                            },
                         );
                         it
                         (
@@ -310,9 +310,9 @@ describe
                                 testWidth({ width: 0x100000000 + 43 }, 43);
                                 testWidth({ width: NaN }, 0);
                                 testWidth({ width: Infinity }, 0);
-                            }
+                            },
                         );
-                    }
+                    },
                 );
 
                 describe
@@ -337,7 +337,7 @@ describe
                                 testHeight(undefined, DEFAULT_HEIGHT);
                                 testHeight({ height: -1 }, DEFAULT_HEIGHT);
                                 testHeight({ height: 0x100000000 - 1 }, DEFAULT_HEIGHT);
-                            }
+                            },
                         );
                         it
                         (
@@ -348,9 +348,9 @@ describe
                                 testHeight({ height: 0x100000000 + 43 }, 43);
                                 testHeight({ height: NaN }, 0);
                                 testHeight({ height: Infinity }, 0);
-                            }
+                            },
                         );
-                    }
+                    },
                 );
 
                 describe
@@ -375,7 +375,7 @@ describe
                                 testPencilSize(undefined, DEFAULT_PENCIL_SIZE);
                                 testPencilSize({ pencilSize: NaN }, DEFAULT_PENCIL_SIZE);
                                 testPencilSize({ pencilSize: 'foo' }, DEFAULT_PENCIL_SIZE);
-                            }
+                            },
                         );
                         it
                         (
@@ -385,7 +385,7 @@ describe
                                 testPencilSize({ pencilSize: -42 }, 0);
                                 testPencilSize({ pencilSize: -0 }, 0);
                                 testPencilSize({ pencilSize: -Infinity }, 0);
-                            }
+                            },
                         );
                         it
                         (
@@ -395,7 +395,7 @@ describe
                                 testPencilSize({ pencilSize: Infinity, width: 99 }, 49.5);
                                 testPencilSize({ width: 1 }, 0.5);
                                 testPencilSize({ width: 0 }, 0);
-                            }
+                            },
                         );
                         it
                         (
@@ -405,9 +405,9 @@ describe
                                 testPencilSize({ pencilSize: Infinity, height: 99 }, 49.5);
                                 testPencilSize({ height: 1 }, 0.5);
                                 testPencilSize({ height: 0 }, 0);
-                            }
+                            },
                         );
-                    }
+                    },
                 );
 
                 describe
@@ -423,9 +423,9 @@ describe
                                 assert.deepEqual
                                 (
                                     Pencilfloor.create().pencils.map(({ color }) => color),
-                                    ['rgb(255, 128, 0)', 'rgb(0, 255, 0)', 'rgb(128, 0, 255)']
+                                    ['rgb(255, 128, 0)', 'rgb(0, 255, 0)', 'rgb(128, 0, 255)'],
                                 );
-                            }
+                            },
                         );
                         it
                         (
@@ -445,7 +445,7 @@ describe
                                 assert.equal(pencils[0].color, 'rgb(255, 0, 0)');
                                 assert.equal(pencils[1].color, 'rgb(0, 0, 0)');
                                 assert.equal(pencils[2].color, 'rgb(0, 255, 0)');
-                            }
+                            },
                         );
                         it
                         (
@@ -457,7 +457,7 @@ describe
                                     assert.throws
                                     (
                                         () => Pencilfloor.create({ pencils: [{ x, y }] }),
-                                        `Pencil ${coordinate}-position `
+                                        `Pencil ${coordinate}-position `,
                                     );
                                 }
 
@@ -467,7 +467,7 @@ describe
                                 testPencilOutOfRange(0, NaN, 'Y');
                                 testPencilOutOfRange(0, 100, 'Y');
                                 testPencilOutOfRange(0, -100, 'Y');
-                            }
+                            },
                         );
                         it
                         (
@@ -478,13 +478,13 @@ describe
                                 (
                                     () => Pencilfloor.create
                                     ({ pencils: [{ x: 0, y: 0 }, { x: 0.5, y: 0.5 }] }),
-                                    /Pencils .* and .* overlap/
+                                    /Pencils .* and .* overlap/,
                                 );
-                            }
+                            },
                         );
-                    }
+                    },
                 );
-            }
+            },
         );
 
         describe
@@ -501,7 +501,7 @@ describe
                         assert.include
                         (defaultArrangePencils, { length: 1, name: 'defaultArrangePencils' });
                         assert.isNotConstructible(defaultArrangePencils);
-                    }
+                    },
                 );
                 it
                 (
@@ -526,7 +526,7 @@ describe
                         assert.closeTo(distance(pencils[0], pencils[1]), 4 * 3 ** 0.5, 1e-14);
                         assert.closeTo(distance(pencils[1], pencils[2]), 4 * 3 ** 0.5, 1e-14);
                         assert.closeTo(distance(pencils[2], pencils[0]), 4 * 3 ** 0.5, 1e-14);
-                    }
+                    },
                 );
                 it
                 (
@@ -543,9 +543,9 @@ describe
                         testEmptyArrangement({ minX: -10, maxX: 10, minY: NaN, maxY: 10 });
                         testEmptyArrangement({ minX: -10, maxX: 10, minY: -10, maxY: 3.9 });
                         testEmptyArrangement({ minX: -10, maxX: 10, minY: -10, maxY: NaN });
-                    }
+                    },
                 );
-            }
+            },
         );
 
         it('instanceof', () => assert.instanceOf(Pencilfloor.create(), Pencilfloor));
@@ -560,7 +560,7 @@ describe
                 it
                 (
                     'is read-only',
-                    () => assert.setterThrows(Pencilfloor.create(), 'instant', 0, TypeError)
+                    () => assert.setterThrows(Pencilfloor.create(), 'instant', 0, TypeError),
                 );
                 it
                 (
@@ -572,10 +572,10 @@ describe
                             const pencilfloor = container.appendChild(Pencilfloor.create());
                             pencilfloor.play();
                             assert.strictEqual((await captureInstant(pencilfloor)).instant, 1);
-                        }
-                    )
+                        },
+                    ),
                 );
-            }
+            },
         );
 
         it
@@ -597,7 +597,7 @@ describe
                 assert.setterSets(pencilfloor, 'instantRate', Math.LOG10E);
                 assert.setterSets(pencilfloor, 'instantRate', -0, 0);
                 assert.setterSets(pencilfloor, 'instantRate', '.123', 0.123);
-            }
+            },
         );
 
         it
@@ -612,7 +612,7 @@ describe
                 assert.setterSets(pencilfloor, 'interactive', 0, false);
                 assert.setterSets(pencilfloor, 'interactive', [], true);
                 assert.setterSets(pencilfloor, 'interactive', undefined, false);
-            }
+            },
         );
 
         describe
@@ -628,7 +628,7 @@ describe
                         const { pause } = Pencilfloor.create();
                         assert.include(pause, { length: 0, name: 'pause' });
                         assert.isNotConstructible(pause);
-                    }
+                    },
                 );
                 it
                 (
@@ -640,7 +640,7 @@ describe
                         assert.firesEvent(() => pencilfloor.pause(), pencilfloor, 'pause');
                         assert.isTrue(pencilfloor.paused);
                         assert.isNull(getOverlayIcon(pencilfloor));
-                    }
+                    },
                 );
                 it
                 (
@@ -653,9 +653,9 @@ describe
                         assert.doesNotFireEvent(() => pencilfloor.pause(), pencilfloor, 'pause');
                         assert.isTrue(pencilfloor.paused);
                         assert.isNotNull(getOverlayIcon(pencilfloor));
-                    }
+                    },
                 );
-            }
+            },
         );
 
         it
@@ -665,7 +665,7 @@ describe
             {
                 const pencilfloor = Pencilfloor.create();
                 assert.setterThrows(pencilfloor, 'paused', false, TypeError);
-            }
+            },
         );
 
         it
@@ -679,7 +679,7 @@ describe
                 it
                 (
                     'is read-only',
-                    () => assert.setterThrows(Pencilfloor.create(), 'pencils', [], TypeError)
+                    () => assert.setterThrows(Pencilfloor.create(), 'pencils', [], TypeError),
                 );
                 it
                 (
@@ -693,9 +693,9 @@ describe
                         (
                             new Set([...pencils1, ...pencils2]).size ===
                             pencils1.length + pencils2.length,
-                            'expected arrays to be disjoint'
+                            'expected arrays to be disjoint',
                         );
-                    }
+                    },
                 );
                 it
                 (
@@ -721,10 +721,10 @@ describe
                             assert.closeTo(pencil0.y, 3 / 4 * 3 ** 0.5, 1e-15);
                             assert.closeTo(pencil1.x, -3 / 4, 1e-15);
                             assert.closeTo(pencil1.y, -3 / 4 * 3 ** 0.5, 1e-15);
-                        }
-                    )
+                        },
+                    ),
                 );
-            }
+            },
         );
 
         describe
@@ -740,7 +740,7 @@ describe
                         const { play } = Pencilfloor.create();
                         assert.include(play, { length: 0, name: 'play' });
                         assert.isNotConstructible(play);
-                    }
+                    },
                 );
                 it
                 (
@@ -753,7 +753,7 @@ describe
                         assert.firesEvent(() => pencilfloor.play(), pencilfloor, 'play');
                         assert.isFalse(pencilfloor.paused);
                         assert.isNull(getOverlayIcon(pencilfloor));
-                    }
+                    },
                 );
                 it
                 (
@@ -765,7 +765,7 @@ describe
                         assert.doesNotFireEvent(() => pencilfloor.play(), pencilfloor, 'play');
                         assert.isFalse(pencilfloor.paused);
                         assert.isNotNull(getOverlayIcon(pencilfloor));
-                    }
+                    },
                 );
                 it
                 (
@@ -775,7 +775,7 @@ describe
                         const pencilfloor = Pencilfloor.create({ pencils: [] });
                         assert.doesNotFireEvent(() => pencilfloor.play(), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
-                    }
+                    },
                 );
                 it
                 (
@@ -785,9 +785,9 @@ describe
                         const pencilfloor = Pencilfloor.create({ pencils: [{ x: 0, y: 0 }] });
                         assert.doesNotFireEvent(() => pencilfloor.play(), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
-                    }
+                    },
                 );
-            }
+            },
         );
 
         it
@@ -809,7 +809,7 @@ describe
                 assert.setterSets(pencilfloor, 'quickness', Math.LOG10E);
                 assert.setterSets(pencilfloor, 'quickness', -0, 0);
                 assert.setterSets(pencilfloor, 'quickness', '.123', 0.123);
-            }
+            },
         );
 
         it('width', () => assert.setterThrows(Pencilfloor.create(), 'width', 0, TypeError));
@@ -832,8 +832,8 @@ describe
                             await assert.firesInstantEvent(pencilfloor, 'after play()');
                             pencilfloor.pause();
                             await assert.doesNotFireInstantEvent(pencilfloor, 'after pause()');
-                        }
-                    )
+                        },
+                    ),
                 );
                 it
                 (
@@ -851,8 +851,8 @@ describe
                             container.removeChild(pencilfloor);
                             await
                             assert.doesNotFireInstantEvent(pencilfloor, 'after detaching element');
-                        }
-                    )
+                        },
+                    ),
                 );
                 it
                 (
@@ -870,8 +870,8 @@ describe
                             await assert.firesInstantEvent(pencilfloor, 'after displaying');
                             style.display = 'none';
                             await assert.doesNotFireInstantEvent(pencilfloor, 'after undisplaying');
-                        }
-                    )
+                        },
+                    ),
                 );
                 it
                 (
@@ -894,8 +894,8 @@ describe
                             await
                             assert.doesNotFireInstantEvent
                             (pencilfloor, 'after undisplaying ancestors');
-                        }
-                    )
+                        },
+                    ),
                 );
                 it
                 (
@@ -908,8 +908,8 @@ describe
                             pencilfloor.instantRate = 0;
                             pencilfloor.play();
                             await assert.doesNotFireInstantEvent(pencilfloor);
-                        }
-                    )
+                        },
+                    ),
                 );
                 it
                 (
@@ -923,8 +923,8 @@ describe
                             iframe.contentDocument.body.appendChild(Pencilfloor.create());
                             pencilfloor.play();
                             await assert.firesInstantEvent(pencilfloor);
-                        }
-                    )
+                        },
+                    ),
                 );
                 it
                 (
@@ -939,8 +939,8 @@ describe
                             iframe.parentNode.removeChild(iframe);
                             pencilfloor.play();
                             await assert.doesNotFireInstantEvent(pencilfloor);
-                        }
-                    )
+                        },
+                    ),
                 );
                 maybeIt
                 (
@@ -966,10 +966,10 @@ describe
                             iframe.contentDocument.body.appendChild(Pencilfloor.create());
                             pencilfloor.play();
                             await assert.doesNotFireInstantEvent(pencilfloor);
-                        }
-                    )
+                        },
+                    ),
                 );
-            }
+            },
         );
 
         maybeDescribe
@@ -998,9 +998,9 @@ describe
                         (
                             container.appendChild(Pencilfloor.create()),
                             Pencilfloor.DEFAULT_WIDTH,
-                            Pencilfloor.DEFAULT_HEIGHT
-                        )
-                    )
+                            Pencilfloor.DEFAULT_HEIGHT,
+                        ),
+                    ),
                 );
                 it
                 (
@@ -1012,9 +1012,9 @@ describe
                         (
                             container.appendChild(Pencilfloor.create({ width: 0, height: 0 })),
                             0,
-                            0
-                        )
-                    )
+                            0,
+                        ),
+                    ),
                 );
                 it
                 (
@@ -1028,8 +1028,8 @@ describe
                             const pencilfloor = container.appendChild(Pencilfloor.create());
                             pencilfloor.style.width = `${EXPECTED_WIDTH}px`;
                             testSize(pencilfloor, EXPECTED_WIDTH, Pencilfloor.DEFAULT_HEIGHT);
-                        }
-                    )
+                        },
+                    ),
                 );
                 it
                 (
@@ -1043,8 +1043,8 @@ describe
                             const pencilfloor = container.appendChild(Pencilfloor.create());
                             pencilfloor.style.width = `${EXPECTED_WIDTH}px`;
                             testSize(pencilfloor, EXPECTED_WIDTH, Pencilfloor.DEFAULT_HEIGHT);
-                        }
-                    )
+                        },
+                    ),
                 );
                 it
                 (
@@ -1058,8 +1058,8 @@ describe
                             const pencilfloor = container.appendChild(Pencilfloor.create());
                             pencilfloor.style.height = `${EXPECTED_HEIGHT}px`;
                             testSize(pencilfloor, Pencilfloor.DEFAULT_WIDTH, EXPECTED_HEIGHT);
-                        }
-                    )
+                        },
+                    ),
                 );
                 it
                 (
@@ -1073,10 +1073,10 @@ describe
                             const pencilfloor = container.appendChild(Pencilfloor.create());
                             pencilfloor.style.height = `${EXPECTED_HEIGHT}px`;
                             testSize(pencilfloor, Pencilfloor.DEFAULT_WIDTH, EXPECTED_HEIGHT);
-                        }
-                    )
+                        },
+                    ),
                 );
-            }
+            },
         );
 
         describe
@@ -1096,7 +1096,7 @@ describe
                         const icon = getOverlayIcon(pencilfloor);
                         assert.isNotNull(icon);
                         assert.equal(icon.type, 'play');
-                    }
+                    },
                 );
                 it
                 (
@@ -1111,7 +1111,7 @@ describe
                         const icon = getOverlayIcon(pencilfloor);
                         assert.isNotNull(icon);
                         assert.equal(icon.type, 'pause');
-                    }
+                    },
                 );
                 it
                 (
@@ -1124,9 +1124,9 @@ describe
                         (() => simulateMousedown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
                         assert.isNull(getOverlayIcon(pencilfloor));
-                    }
+                    },
                 );
-            }
+            },
         );
 
         describe
@@ -1145,7 +1145,7 @@ describe
                         const icon = getOverlayIcon(pencilfloor);
                         assert.isNotNull(icon);
                         assert.equal(icon.type, 'play');
-                    }
+                    },
                 );
                 it
                 (
@@ -1159,7 +1159,7 @@ describe
                         const icon = getOverlayIcon(pencilfloor);
                         assert.isNotNull(icon);
                         assert.equal(icon.type, 'pause');
-                    }
+                    },
                 );
                 it
                 (
@@ -1172,7 +1172,7 @@ describe
                         (() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
                         assert.isNull(getOverlayIcon(pencilfloor));
-                    }
+                    },
                 );
                 it
                 (
@@ -1184,7 +1184,7 @@ describe
                         (() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
                         assert.isNull(getOverlayIcon(pencilfloor));
-                    }
+                    },
                 );
                 it
                 (
@@ -1196,9 +1196,9 @@ describe
                         (() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
                         assert.isNull(getOverlayIcon(pencilfloor));
-                    }
+                    },
                 );
-            }
+            },
         );
 
         maybeDescribe
@@ -1221,7 +1221,7 @@ describe
                             top:    rect.top + (rect.height - expectedSize) / 2,
                             right:  rect.right - (rect.width - expectedSize) / 2,
                             bottom: rect.bottom - (rect.height - expectedSize) / 2,
-                        }
+                        },
                     );
                 }
 
@@ -1232,8 +1232,8 @@ describe
                     (
                         container =>
                         testOverlayIconPosition
-                        (container.appendChild(Pencilfloor.create({ width: 256, height: 64 })), 42)
-                    )
+                        (container.appendChild(Pencilfloor.create({ width: 256, height: 64 })), 42),
+                    ),
                 );
                 it
                 (
@@ -1242,8 +1242,11 @@ describe
                     (
                         container =>
                         testOverlayIconPosition
-                        (container.appendChild(Pencilfloor.create({ width: 200, height: 400 })), 66)
-                    )
+                        (
+                            container.appendChild(Pencilfloor.create({ width: 200, height: 400 })),
+                            66,
+                        ),
+                    ),
                 );
                 it
                 (
@@ -1252,8 +1255,8 @@ describe
                     (
                         container =>
                         testOverlayIconPosition
-                        (container.appendChild(Pencilfloor.create({ width: 50, height: 400 })), 50)
-                    )
+                        (container.appendChild(Pencilfloor.create({ width: 50, height: 400 })), 50),
+                    ),
                 );
                 it
                 (
@@ -1262,10 +1265,10 @@ describe
                     (
                         container =>
                         testOverlayIconPosition
-                        (container.appendChild(Pencilfloor.create({ width: 50, height: 400 })), 50)
-                    )
+                        (container.appendChild(Pencilfloor.create({ width: 50, height: 400 })), 50),
+                    ),
                 );
-            }
+            },
         );
-    }
+    },
 );

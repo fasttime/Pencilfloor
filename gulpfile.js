@@ -34,7 +34,7 @@ task
             },
         );
         return stream;
-    }
+    },
 );
 
 task
@@ -46,7 +46,7 @@ task
 
         const cmd = fork('test/node-spec-runner', { execArgv: ['--experimental-modules'] });
         cmd.on('exit', code => callback(code && 'Test failed'));
-    }
+    },
 );
 
 task('default', series('lint', 'test'));

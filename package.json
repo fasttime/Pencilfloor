@@ -35,8 +35,8 @@
     "chai": "~4.2.0",
     "chalk": "~2.4.1",
     "gulp": "~4.0.0",
-    "gulp-fasttime-lint": "~0.5.1",
-    "jsdom": "~13.0.0",
+    "gulp-fasttime-lint": "~0.7.0",
+    "jsdom": "~13.1.0",
     "mocha": "~5.2.0"
   },
   "engines": {

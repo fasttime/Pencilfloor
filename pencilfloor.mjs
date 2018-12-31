@@ -99,7 +99,7 @@ createParams =>
         pencilMinPos,
         pencilMaxPos,
         dblPencilMinPos,
-        dblPencilMaxPos
+        dblPencilMaxPos,
     )
     {
         const pos0 = pencil[posPropName];
@@ -370,7 +370,7 @@ createParams =>
             play: defineValueProperty(play, true),
             quickness: defineAccessorProperty(() => quickness, setQuickness),
             width: defineValueProperty(width),
-        }
+        },
     );
     const base = pencilfloor.appendChild(document.createElement('SPAN'));
     makeFocusable();
@@ -384,7 +384,7 @@ createParams =>
                 togglePlay(true);
                 evt.stopPropagation();
             }
-        }
+        },
     );
     base.addEventListener
     (
@@ -396,7 +396,7 @@ createParams =>
                 togglePlay(true);
                 evt.stopPropagation();
             }
-        }
+        },
     );
     base.appendChild(document.createElement('STYLE')).textContent =
     `
@@ -520,5 +520,5 @@ Object.defineProperties
         DEFAULT_WIDTH:          { value: DEFAULT_WIDTH },
         create:                 { value: create, writable: true, configurable: true },
         defaultArrangePencils:  { value: defaultArrangePencils },
-    }
+    },
 );
