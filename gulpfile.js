@@ -14,21 +14,21 @@ task
         (
             {
                 src: 'gulpfile.js',
-                envs: ['node'],
+                envs: 'node',
                 parserOptions: { ecmaVersion: 8 },
             },
             {
-                src: ['test/**/*.js', 'test/**/*.mjs', '!test/node-spec-runner.mjs'],
+                src: ['test/**/*.{js,mjs}', '!test/node-spec-runner.mjs'],
                 parserOptions: { ecmaVersion: 8, sourceType: 'module' },
             },
             {
-                src: ['pencilfloor.js', 'pencilfloor.mjs'],
-                envs: ['browser'],
+                src: 'pencilfloor.{js,mjs}',
+                envs: 'browser',
                 parserOptions: { ecmaVersion: 8, sourceType: 'module' },
             },
             {
                 src: 'playground/*.js',
-                envs: ['browser'],
+                envs: 'browser',
                 globals: ['Pencilfloor'],
                 parserOptions: { ecmaVersion: 8 },
             },
