@@ -43,12 +43,15 @@ task
     async () =>
     {
         const del = require('del');
-        const { promises: { symlink } } = require('fs');
+        const { promises: { mkdir, symlink } } = require('fs');
         const { dirname, join } = require('path');
 
-        const targetPath = dirname(require.resolve('request/package.json'));
-        const symlinkPath = join(dirname(targetPath), 'request-promise-native');
+        const jsdomNodeModulesPath =
+        join(dirname(require.resolve('jsdom/package.json')), 'node_modules');
+        await mkdir(jsdomNodeModulesPath, { recursive: true });
+        const symlinkPath = join(jsdomNodeModulesPath, 'request-promise-native');
         await del(symlinkPath);
+        const targetPath = dirname(require.resolve('request/package.json'));
         await symlink(targetPath, symlinkPath);
     },
 );
