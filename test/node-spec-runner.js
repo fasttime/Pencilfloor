@@ -2,20 +2,20 @@
 
 /* eslint-env node */
 
-import './dom-emulation';
-import Mocha from 'mocha';
+import './dom-emulation.js';
 import chai from 'chai';
 import glob from 'glob';
-import path from 'path';
+import Mocha from 'mocha';
+import { dirname, normalize } from 'path';
 
 global.chai = chai;
 
 const currentUrl = new URL(import.meta.url);
-const __dirname = path.normalize(path.dirname(currentUrl.pathname)).replace(/^\\/, '');
+const __dirname = normalize(dirname(currentUrl.pathname)).replace(/^\\/, '');
 const mocha = new Mocha();
 glob
 (
-    '*.spec.mjs',
+    '*.spec.js',
     { cwd: __dirname, nodir: true },
     (error, files) =>
     {

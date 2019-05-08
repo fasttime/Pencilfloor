@@ -1,6 +1,6 @@
 'use strict';
 
-const { series, task } = require('gulp');
+const { parallel, series, task } = require('gulp');
 
 task
 (
@@ -15,25 +15,41 @@ task
             {
                 src: 'gulpfile.js',
                 envs: 'node',
-                parserOptions: { ecmaVersion: 8 },
+                parserOptions: { ecmaVersion: 10 },
             },
             {
-                src: ['test/**/*.{js,mjs}', '!test/node-spec-runner.mjs'],
-                parserOptions: { ecmaVersion: 8, sourceType: 'module' },
+                src: ['test/**/*.js', '!test/node-spec-runner.js'],
+                parserOptions: { ecmaVersion: 10, sourceType: 'module' },
             },
             {
-                src: 'pencilfloor.{js,mjs}',
+                src: 'lib/**/*.js',
                 envs: 'browser',
-                parserOptions: { ecmaVersion: 8, sourceType: 'module' },
+                parserOptions: { ecmaVersion: 10, sourceType: 'module' },
             },
             {
-                src: 'playground/*.js',
+                src: 'playground/**/*.js',
                 envs: 'browser',
                 globals: ['Pencilfloor'],
-                parserOptions: { ecmaVersion: 8 },
+                parserOptions: { ecmaVersion: 10 },
             },
         );
         return stream;
+    },
+);
+
+task
+(
+    'patch',
+    async () =>
+    {
+        const del = require('del');
+        const { promises: { symlink } } = require('fs');
+        const { dirname, join } = require('path');
+
+        const targetPath = dirname(require.resolve('request/package.json'));
+        const symlinkPath = join(dirname(targetPath), 'request-promise-native');
+        await del(symlinkPath);
+        await symlink(targetPath, symlinkPath);
     },
 );
 
@@ -44,9 +60,9 @@ task
     {
         const { fork } = require('child_process');
 
-        const cmd = fork('test/node-spec-runner', { execArgv: ['--experimental-modules'] });
+        const cmd = fork('test/node-spec-runner.js', { execArgv: ['--experimental-modules'] });
         cmd.on('exit', code => callback(code && 'Test failed'));
     },
 );
 
-task('default', series('lint', 'test'));
+task('default', series(parallel('lint', 'patch'), 'test'));

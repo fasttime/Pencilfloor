@@ -1,7 +1,7 @@
 /* eslint-env browser, mocha */
 /* global chai */
 
-import Pencilfloor from '../pencilfloor.mjs';
+import Pencilfloor from '../lib/pencilfloor.js';
 
 const { assert } = chai;
 

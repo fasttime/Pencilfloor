@@ -10,8 +10,7 @@ import path from 'path';
 
 const __dirname =
 path.normalize(path.dirname(new URL(import.meta.url).pathname)).replace(/^\\/, '');
-const mimeTypes =
-{ '.css': 'text/css', '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript' };
+const mimeTypes = { '.css': 'text/css', '.html': 'text/html', '.js': 'text/javascript' };
 const port = 8080;
 
 http.createServer
