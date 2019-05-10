@@ -43,16 +43,18 @@ task
     async () =>
     {
         const del = require('del');
-        const { promises: { mkdir, symlink } } = require('fs');
-        const { dirname, join } = require('path');
+        const { promises: { mkdir, writeFile } } = require('fs');
+        const { dirname, join, relative } = require('path');
 
-        const jsdomNodeModulesPath =
-        join(dirname(require.resolve('jsdom/package.json')), 'node_modules');
-        await mkdir(jsdomNodeModulesPath, { recursive: true });
-        const symlinkPath = join(jsdomNodeModulesPath, 'request-promise-native');
-        await del(symlinkPath);
-        const targetPath = dirname(require.resolve('request/package.json'));
-        await symlink(targetPath, symlinkPath);
+        const { resolve } = require;
+        const pathOf = pkgName => dirname(resolve(`${pkgName}/package.json`));
+        const requestPromiseNativePath =
+        join(pathOf('jsdom'), 'node_modules', 'request-promise-native');
+        await del(requestPromiseNativePath);
+        await mkdir(requestPromiseNativePath, { recursive: true });
+        const packageJsonPath = join(requestPromiseNativePath, 'package.json');
+        const requestPath = relative(requestPromiseNativePath, pathOf('request'));
+        await writeFile(packageJsonPath, JSON.stringify({ main: requestPath }, undefined, 2));
     },
 );
 
