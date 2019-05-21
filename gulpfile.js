@@ -1,6 +1,6 @@
 'use strict';
 
-const { parallel, series, task } = require('gulp');
+const { series, task } = require('gulp');
 
 task
 (
@@ -39,27 +39,6 @@ task
 
 task
 (
-    'patch',
-    async () =>
-    {
-        const del = require('del');
-        const { promises: { mkdir, writeFile } } = require('fs');
-        const { dirname, join, relative } = require('path');
-
-        const { resolve } = require;
-        const pathOf = pkgName => dirname(resolve(`${pkgName}/package.json`));
-        const requestPromiseNativePath =
-        join(pathOf('jsdom'), 'node_modules', 'request-promise-native');
-        await del(requestPromiseNativePath);
-        await mkdir(requestPromiseNativePath, { recursive: true });
-        const packageJsonPath = join(requestPromiseNativePath, 'package.json');
-        const requestPath = relative(requestPromiseNativePath, pathOf('request'));
-        await writeFile(packageJsonPath, JSON.stringify({ main: requestPath }, undefined, 2));
-    },
-);
-
-task
-(
     'test',
     callback =>
     {
@@ -70,4 +49,4 @@ task
     },
 );
 
-task('default', series(parallel('lint', 'patch'), 'test'));
+task('default', series('lint', 'test'));
