@@ -6,12 +6,13 @@ import './dom-emulation.js';
 import chai from 'chai';
 import glob from 'glob';
 import Mocha from 'mocha';
-import { dirname, normalize } from 'path';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 global.chai = chai;
 
-const currentUrl = new URL(import.meta.url);
-const __dirname = normalize(dirname(currentUrl.pathname)).replace(/^\\/, '');
+const currentUrl = import.meta.url;
+const __dirname = dirname(fileURLToPath(currentUrl));
 const mocha = new Mocha();
 glob
 (

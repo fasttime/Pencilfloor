@@ -44,8 +44,9 @@ task
     {
         const { fork } = require('child_process');
 
-        const cmd = fork('test/node-spec-runner.js', { execArgv: ['--experimental-modules'] });
-        cmd.on('exit', code => callback(code && 'Test failed'));
+        const childProcess =
+        fork('test/node-spec-runner.js', { execArgv: ['--experimental-modules'] });
+        childProcess.on('exit', code => callback(code && 'Test failed'));
     },
 );
 
