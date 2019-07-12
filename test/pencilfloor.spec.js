@@ -112,8 +112,7 @@ function withContainer(...args)
 }
 
 {
-    const { Assertion } = chai;
-    const { eql, expectTypes, objDisplay } = chai.util;
+    const { Assertion, util: { eql, expectTypes, objDisplay } } = chai;
 
     function captureEvent(fn, pencilfloor, evtType)
     {
@@ -478,7 +477,24 @@ describe
                                 (
                                     () => Pencilfloor.create
                                     ({ pencils: [{ x: 0, y: 0 }, { x: 0.5, y: 0.5 }] }),
-                                    /Pencils .* and .* overlap/,
+                                    /^Pencils .* and .* overlap/,
+                                );
+                            },
+                        );
+                        it
+                        (
+                            'cannot be a defined primitive',
+                            () =>
+                            {
+                                assert.throws
+                                (
+                                    () => Pencilfloor.create({ pencils: 4 }),
+                                    TypeError,
+                                    RegExp
+                                    (
+                                        '^Parameter "pencils" must be an iterable or a function ' +
+                                        'returning an iterable$',
+                                    ),
                                 );
                             },
                         );

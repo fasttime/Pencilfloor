@@ -2,30 +2,24 @@
 
 /* eslint-env node */
 
-import chalk from 'chalk';
-import fs from 'fs';
-import http from 'http';
-import os from 'os';
-import path from 'path';
+import chalk                        from 'chalk';
+import { createReadStream }         from 'fs';
+import { createServer }             from 'http';
+import { networkInterfaces }        from 'os';
+import { dirname, extname, join }   from 'path';
+import { fileURLToPath }            from 'url';
 
-const __dirname =
-path.normalize(path.dirname(new URL(import.meta.url).pathname)).replace(/^\\/, '');
-const mimeTypes = { '.css': 'text/css', '.html': 'text/html', '.js': 'text/javascript' };
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const mimeTypes = { '.css': 'text/css', '.html': 'text/html', '.js': 'application/javascript' };
 const port = 8080;
 
-http.createServer
+createServer
 (
     (request, response) =>
     {
-        const requestUrl = request.url.replace(/\?[^]*/, '');
-        if (requestUrl.includes('\\'))
-        {
-            response.writeHead(400);
-            response.end();
-            return;
-        }
-        const pathname = path.join(__dirname, requestUrl);
-        const stream = fs.createReadStream(pathname);
+        const requestUrl = request.url.replace(/\?.*/s, '');
+        const pathname = join(__dirname, requestUrl);
+        const stream = createReadStream(pathname);
         stream.on
         (
             'open',
@@ -33,13 +27,13 @@ http.createServer
             {
                 const headers = { };
                 {
-                    const ext = path.extname(requestUrl);
+                    const ext = extname(requestUrl);
                     if (mimeTypes.hasOwnProperty(ext))
                         headers['Content-Type'] = mimeTypes[ext];
                 }
                 response.writeHead(200, headers);
                 stream.pipe(response);
-            }
+            },
         );
         stream.on
         (
@@ -48,9 +42,9 @@ http.createServer
             {
                 response.writeHead(404);
                 response.end();
-            }
+            },
         );
-    }
+    },
 )
 .listen(port);
 
@@ -58,7 +52,7 @@ http.createServer
     const ip = getIP();
     if (ip)
     {
-        const baseUrl = `http://${getIP()}:${port}`;
+        const baseUrl = `http://${ip}:${port}`;
         const urlInfo =
         (name, path) => `\n${chalk.bold(name)}\n${chalk.blue(`${baseUrl}${path}`)}\n`;
         console.log
@@ -72,8 +66,8 @@ http.createServer
 function getIP()
 {
     let ip;
-    const networkInterfaces = Object.values(os.networkInterfaces());
-    for (const networkInterface of networkInterfaces)
+    const networkInterfaceList = Object.values(networkInterfaces());
+    for (const networkInterface of networkInterfaceList)
     {
         for (const assignedNetworkAddress of networkInterface)
         {

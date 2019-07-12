@@ -1,6 +1,17 @@
 'use strict';
 
-const { series, task } = require('gulp');
+const { parallel, series, task } = require('gulp');
+
+task
+(
+    'clean',
+    async () =>
+    {
+        const del = require('del');
+
+        await del(['.nyc_output', 'coverage']);
+    },
+);
 
 task
 (
@@ -44,10 +55,17 @@ task
     {
         const { fork } = require('child_process');
 
+        const { resolve } = require;
+        const nycPath = resolve('nyc/bin/nyc');
+        const modulePath = resolve('./test/node-spec-runner');
         const childProcess =
-        fork('test/node-spec-runner.js', { execArgv: ['--experimental-modules'] });
+        fork
+        (
+            nycPath,
+            ['--require', 'esm', '--reporter=html', '--reporter=text-summary', '--', modulePath],
+        );
         childProcess.on('exit', code => callback(code && 'Test failed'));
     },
 );
 
-task('default', series('lint', 'test'));
+task('default', series(parallel('clean', 'lint'), 'test'));

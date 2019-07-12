@@ -3,17 +3,18 @@
 /* eslint-env node */
 
 import './dom-emulation.js';
-import chai from 'chai';
-import glob from 'glob';
-import Mocha from 'mocha';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+
+import chai                 from 'chai';
+import glob                 from 'glob';
+import Mocha                from 'mocha';
+import { dirname }          from 'path';
+import { fileURLToPath }    from 'url';
 
 global.chai = chai;
 
 const currentUrl = import.meta.url;
 const __dirname = dirname(fileURLToPath(currentUrl));
-const mocha = new Mocha();
+const mocha = new Mocha({ ignoreLeaks: false });
 glob
 (
     '*.spec.js',

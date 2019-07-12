@@ -36,10 +36,13 @@
     "canvas": "~2.5.0",
     "chai": "~4.2.0",
     "chalk": "~2.4.2",
+    "del": "~5.0.0",
+    "esm": "~3.2.25",
     "gulp": "~4.0.2",
-    "gulp-fasttime-lint": "~0.10.1",
+    "gulp-fasttime-lint": "~0.11.2",
     "jsdom": "~15.1.1",
-    "mocha": "~6.1.4"
+    "mocha": "~6.1.4",
+    "nyc": "~14.1.1"
   },
   "engines": {
     "node": ">=12.3.0"
