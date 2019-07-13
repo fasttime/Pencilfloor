@@ -12,8 +12,15 @@ function captureInstant(pencilfloor)
     (
         resolve =>
         {
-            requestAnimationFrame
-            (() => requestAnimationFrame(() => requestAnimationFrame(() => resolve(null))));
+            function callback()
+            {
+                if (animationFramesLeft--)
+                    requestAnimationFrame(callback);
+                else
+                    resolve(null);
+            }
+
+            let animationFramesLeft = 4;
             pencilfloor.addEventListener
             (
                 'instant',
@@ -24,6 +31,7 @@ function captureInstant(pencilfloor)
                 },
                 { once: true },
             );
+            callback();
         },
     );
     return promise;
@@ -609,9 +617,9 @@ describe
                 assert.setterThrows(pencilfloor, 'instantRate', 'foo', RangeError);
                 assert.setterThrows(pencilfloor, 'instantRate', { }, RangeError);
                 assert.setterSets(pencilfloor, 'instantRate', 0);
+                assert.setterSets(pencilfloor, 'instantRate', -0, 0);
                 assert.setterSets(pencilfloor, 'instantRate', 1);
                 assert.setterSets(pencilfloor, 'instantRate', Math.LOG10E);
-                assert.setterSets(pencilfloor, 'instantRate', -0, 0);
                 assert.setterSets(pencilfloor, 'instantRate', '.123', 0.123);
             },
         );
@@ -727,16 +735,29 @@ describe
                                     { x: 1 / 4 * (1 + Number.EPSILON), y: 3 ** 0.5 / 4 },
                                     { x: -1 / 4 * (1 + Number.EPSILON), y: -(3 ** 0.5) / 4 },
                                 ],
+                                width: 50,
+                                height: 50,
                             };
                             const pencilfloor =
                             container.appendChild(Pencilfloor.create(createParams));
                             pencilfloor.quickness = 1;
                             pencilfloor.play();
-                            const [pencil0, pencil1] = (await captureInstant(pencilfloor)).pencils;
-                            assert.closeTo(pencil0.x, 3 / 4, 1e-15);
-                            assert.closeTo(pencil0.y, 3 / 4 * 3 ** 0.5, 1e-15);
-                            assert.closeTo(pencil1.x, -3 / 4, 1e-15);
-                            assert.closeTo(pencil1.y, -3 / 4 * 3 ** 0.5, 1e-15);
+                            {
+                                const [pencil0, pencil1] =
+                                (await captureInstant(pencilfloor)).pencils;
+                                assert.closeTo(pencil0.x, 3 / 4, 1e-15);
+                                assert.closeTo(pencil0.y, 3 / 4 * 3 ** 0.5, 1e-15);
+                                assert.closeTo(pencil1.x, -3 / 4, 1e-15);
+                                assert.closeTo(pencil1.y, -3 / 4 * 3 ** 0.5, 1e-15);
+                            }
+                            {
+                                const [pencil0, pencil1] =
+                                (await captureInstant(pencilfloor)).pencils;
+                                assert.isBelow(pencil0.x, 5);
+                                assert.isBelow(pencil0.y, 5);
+                                assert.isAbove(pencil1.x, -5);
+                                assert.isAbove(pencil1.y, -5);
+                            }
                         },
                     ),
                 );
@@ -910,6 +931,22 @@ describe
                             await
                             assert.doesNotFireInstantEvent
                             (pencilfloor, 'after undisplaying ancestors');
+                        },
+                    ),
+                );
+                it
+                (
+                    'is not fired when a pencilfloor is detached prematurely',
+                    withContainer
+                    (
+                        async container =>
+                        {
+                            const pencilfloor = Pencilfloor.create();
+                            pencilfloor.play();
+                            container.appendChild(pencilfloor);
+                            container.addEventListener
+                            ('animationstart', () => container.removeChild(pencilfloor), true);
+                            await assert.doesNotFireInstantEvent(pencilfloor);
                         },
                     ),
                 );

@@ -1,4 +1,4 @@
-#!/usr/bin/env node --experimental-modules
+#!/usr/bin/env node --experimental-modules --no-warnings
 
 /* eslint-env node */
 
@@ -9,43 +9,36 @@ import glob                 from 'glob';
 import Mocha                from 'mocha';
 import { dirname }          from 'path';
 import { fileURLToPath }    from 'url';
+import { promisify }        from 'util';
 
-global.chai = chai;
+function testExecArgv(regExp)
+{
+    const returnValue = process.execArgv.some(arg => regExp.test(arg));
+    return returnValue;
+}
 
-const currentUrl = import.meta.url;
-const __dirname = dirname(fileURLToPath(currentUrl));
-const mocha = new Mocha({ ignoreLeaks: false });
-glob
-(
-    '*.spec.js',
-    { cwd: __dirname, nodir: true },
-    (error, files) =>
+(async () =>
+{
+    global.chai = chai;
+    const mocha = new Mocha({ ignoreLeaks: false });
+    const currentUrl = import.meta.url;
+    const __dirname = dirname(fileURLToPath(currentUrl));
+    const files = await promisify(glob)('*.spec.js', { cwd: __dirname, nodir: true });
+    mocha.suite.emit('pre-require', global, null, mocha);
     {
-        if (error)
-            throw error;
-        const urls = files.map(file => new URL(file, currentUrl));
-        (async () =>
-        {
-            try
-            {
-                for (const url of urls)
-                    await import(url); // eslint-disable-line no-await-in-loop
-                mocha.run
-                (
-                    failures =>
-                    {
-                        if (failures)
-                            process.exitCode = 1;
-                    }
-                );
-            }
-            catch (error)
-            {
-                console.error(error);
-                process.exitCode = 1;
-            }
-        }
-        )();
+        const debug = testExecArgv(/^--inspect-brk(?![^=])/);
+        mocha.enableTimeouts(!debug);
     }
-);
-mocha.suite.emit('pre-require', global, null, mocha);
+    const urls = files.map(file => new URL(file, currentUrl));
+    for (const url of urls)
+        await import(url); // eslint-disable-line no-await-in-loop
+    mocha.run
+    (
+        failures =>
+        {
+            if (failures)
+                process.exitCode = 1;
+        },
+    );
+}
+)();
