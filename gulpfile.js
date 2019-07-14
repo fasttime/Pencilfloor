@@ -33,15 +33,9 @@ task
                 parserOptions: { ecmaVersion: 10, sourceType: 'module' },
             },
             {
-                src: 'lib/**/*.js',
+                src: ['lib/**/*.{js,ts}', 'playground/**/*.js'],
                 envs: 'browser',
-                parserOptions: { ecmaVersion: 10, sourceType: 'module' },
-            },
-            {
-                src: 'playground/**/*.js',
-                envs: 'browser',
-                globals: ['Pencilfloor'],
-                parserOptions: { ecmaVersion: 10 },
+                parserOptions: { ecmaVersion: 10, project: 'tsconfig.json', sourceType: 'module' },
             },
         );
         return stream;

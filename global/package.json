@@ -1,0 +1,4 @@
+{
+  "main": "../lib/pencilfloor-global.js",
+  "types": "../lib/pencilfloor-global.d.ts"
+}

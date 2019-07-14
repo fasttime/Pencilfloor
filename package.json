@@ -16,11 +16,13 @@
   "license": "ISC",
   "author": "Francesco Trotta <ft@fasttime.org> (https://github.com/fasttime)",
   "files": [
+    "global",
     "lib",
     "playground",
     "!.*"
   ],
   "main": "lib/pencilfloor.js",
+  "types": "lib/pencilfloor.d.ts",
   "directories": {
     "lib": "lib",
     "test": "test"
@@ -30,7 +32,8 @@
     "url": "https://github.com/fasttime/pencilfloor.git"
   },
   "scripts": {
-    "build": "npm install && gulp"
+    "build": "npm install && gulp",
+    "serve": "node --experimental-modules --no-warnings ./serve.js"
   },
   "devDependencies": {
     "canvas": "~2.5.0",
