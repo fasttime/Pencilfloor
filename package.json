@@ -36,19 +36,18 @@
     "serve": "node --experimental-modules --no-warnings ./serve.js"
   },
   "devDependencies": {
-    "canvas": "~2.5.0",
+    "canvas": "~2.6.0",
     "chai": "~4.2.0",
     "chalk": "~2.4.2",
-    "del": "~5.0.0",
     "esm": "~3.2.25",
     "gulp": "~4.0.2",
-    "gulp-fasttime-lint": "~0.12.0",
+    "gulp-fasttime-lint": "~0.16.0",
     "jsdom": "~15.1.1",
-    "mocha": "~6.1.4",
+    "mocha": "~6.2.0",
     "nyc": "~14.1.1"
   },
   "engines": {
-    "node": ">=12.3.0"
+    "node": ">=12.10.0"
   },
   "type": "module"
 }
