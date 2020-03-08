@@ -110,9 +110,7 @@ function withContainer(...args)
         }
         finally
         {
-            const { parentNode } = container;
-            if (parentNode !== null)
-                parentNode.removeChild(container);
+            container.remove();
         }
     }
 

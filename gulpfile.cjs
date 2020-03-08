@@ -9,8 +9,7 @@ task
     {
         const { promises: { rmdir } } = require('fs');
 
-        const paths = ['.nyc_output', 'coverage'];
-        await Promise.all(paths.map(path => rmdir(path, { recursive: true })));
+        await rmdir('coverage', { recursive: true });
     },
 );
 
@@ -19,13 +18,13 @@ task
     'lint',
     () =>
     {
-        const lint = require('gulp-fasttime-lint');
+        const lint = require('@fasttime/gulp-lint');
 
         const stream =
         lint
         (
             {
-                src: 'gulpfile.js',
+                src: 'gulpfile.cjs',
                 envs: 'node',
                 parserOptions: { ecmaVersion: 10 },
             },
@@ -51,14 +50,10 @@ task
         const { fork } = require('child_process');
 
         const { resolve } = require;
-        const nycPath = resolve('nyc/bin/nyc');
+        const c8Path = resolve('c8/bin/c8');
         const modulePath = resolve('./test/node-spec-runner');
         const childProcess =
-        fork
-        (
-            nycPath,
-            ['--require', 'esm', '--reporter=html', '--reporter=text-summary', '--', modulePath],
-        );
+        fork(c8Path, ['--reporter=html', '--reporter=text-summary', modulePath]);
         childProcess.on('exit', code => callback(code && 'Test failed'));
     },
 );
