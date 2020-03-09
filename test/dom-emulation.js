@@ -19,7 +19,8 @@ function areAncestorsDisplayed(node)
         }
         else
         {
-            node = node.parentElement;
+            node = node.parentNode;
+            node = node.host || node;
             if (!node)
                 return false;
         }
@@ -108,6 +109,12 @@ function traverseCandidate(candidate, animatedElements)
             traverseCandidate(child, animatedElements);
         if (candidate instanceof HTMLIFrameElement)
             traverseCandidate(candidate.contentDocument.documentElement, animatedElements);
+        const { shadowRoot } = candidate;
+        if (shadowRoot)
+        {
+            for (const child of shadowRoot.children)
+                traverseCandidate(child, animatedElements);
+        }
     }
 }
 

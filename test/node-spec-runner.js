@@ -20,7 +20,7 @@ function testExecArgv(regExp)
 (async () =>
 {
     global.chai = chai;
-    const mocha = new Mocha({ ignoreLeaks: false });
+    const mocha = new Mocha({ checkLeaks: true });
     const currentUrl = import.meta.url;
     const __dirname = dirname(fileURLToPath(currentUrl));
     const files = await promisify(glob)('*.spec.js', { cwd: __dirname, nodir: true });

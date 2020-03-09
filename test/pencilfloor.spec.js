@@ -56,7 +56,7 @@ function createInteractiveIframe()
     return promise;
 }
 
-const getBase = pencilfloor => pencilfloor.querySelector('SPAN');
+const getBase = pencilfloor => pencilfloor.shadowRoot.querySelector('SPAN');
 
 function getOverlayIcon(pencilfloor)
 {
@@ -78,10 +78,9 @@ function getOverlayIcon(pencilfloor)
 
 function isOffsetParentSupported()
 {
-    const { body } = document;
-    const div = body.appendChild(document.createElement('DIV'));
+    const div = document.body.appendChild(document.createElement('DIV'));
     const supported = Boolean(div.offsetParent);
-    body.removeChild(div);
+    div.remove();
     return supported;
 }
 
@@ -239,6 +238,14 @@ function withContainer(...args)
         (false, `${subject} was expected to throw a ${errorType.name}, but ${actualMsg}`);
     };
 }
+after
+(
+    () =>
+    {
+        if (typeof opener === 'undefined')
+            window.close();
+    },
+);
 
 describe
 (
@@ -883,7 +890,7 @@ describe
                             assert.doesNotFireInstantEvent(pencilfloor, 'before attaching element');
                             container.appendChild(pencilfloor);
                             await assert.firesInstantEvent(pencilfloor, 'after attaching element');
-                            container.removeChild(pencilfloor);
+                            pencilfloor.remove();
                             await
                             assert.doesNotFireInstantEvent(pencilfloor, 'after detaching element');
                         },
@@ -942,8 +949,8 @@ describe
                             const pencilfloor = Pencilfloor.create();
                             pencilfloor.play();
                             container.appendChild(pencilfloor);
-                            container.addEventListener
-                            ('animationstart', () => container.removeChild(pencilfloor), true);
+                            getBase(pencilfloor)
+                            .addEventListener('animationstart', () => pencilfloor.remove(), true);
                             await assert.doesNotFireInstantEvent(pencilfloor);
                         },
                     ),
@@ -987,7 +994,7 @@ describe
                         {
                             const pencilfloor =
                             iframe.contentDocument.body.appendChild(Pencilfloor.create());
-                            iframe.parentNode.removeChild(iframe);
+                            iframe.remove();
                             pencilfloor.play();
                             await assert.doesNotFireInstantEvent(pencilfloor);
                         },
@@ -997,12 +1004,11 @@ describe
                 (
                     (() =>
                     {
-                        const { body } = document;
-                        const iframe = body.appendChild(document.createElement('IFRAME'));
+                        const iframe = document.body.appendChild(document.createElement('IFRAME'));
                         iframe.style.display = 'none';
                         const undisplayed =
                         !iframe.contentDocument.documentElement.getClientRects().length;
-                        body.removeChild(iframe);
+                        iframe.remove();
                         return undisplayed;
                     }
                     )(),
@@ -1031,7 +1037,7 @@ describe
             {
                 function testSize(pencilfloor, expectedWidth, expectedHeight)
                 {
-                    const canvas = pencilfloor.querySelector('CANVAS');
+                    const canvas = getBase(pencilfloor).querySelector('CANVAS');
                     assert.strictEqual(pencilfloor.offsetWidth, expectedWidth, 'pencilfloor width');
                     assert.strictEqual(canvas.offsetWidth, expectedWidth, 'canvas width');
                     assert.strictEqual

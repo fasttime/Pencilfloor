@@ -1,4 +1,4 @@
 /* eslint-env browser, mocha */
 
-mocha.setup({ globals: ['$0', '$1', '$2', '$3', '$4'], ignoreLeaks: false, ui: 'bdd' });
+mocha.setup({ checkLeaks: true, globals: ['$0', '$1', '$2', '$3', '$4'], ui: 'bdd' });
 addEventListener('load', () => mocha.run());
