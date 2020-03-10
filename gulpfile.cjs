@@ -26,16 +26,17 @@ task
             {
                 src: 'gulpfile.cjs',
                 envs: 'node',
-                parserOptions: { ecmaVersion: 10 },
+                parserOptions: { ecmaVersion: 2020 },
             },
             {
-                src: ['test/**/*.js', '!test/node-spec-runner.js'],
-                parserOptions: { ecmaVersion: 10, sourceType: 'module' },
+                src: ['test/**/*.js', '!test/{node-spec-runner,serve}.js'],
+                parserOptions: { ecmaVersion: 2020, sourceType: 'module' },
             },
             {
                 src: ['lib/**/*.{js,ts}', 'playground/**/*.js'],
                 envs: 'browser',
-                parserOptions: { ecmaVersion: 10, project: 'tsconfig.json', sourceType: 'module' },
+                parserOptions:
+                { ecmaVersion: 2020, project: 'tsconfig.json', sourceType: 'module' },
             },
         );
         return stream;
@@ -53,7 +54,12 @@ task
         const c8Path = resolve('c8/bin/c8');
         const modulePath = resolve('./test/node-spec-runner');
         const childProcess =
-        fork(c8Path, ['--reporter=html', '--reporter=text-summary', modulePath]);
+        fork
+        (
+            c8Path,
+            ['--reporter=html', '--reporter=text-summary', process.execPath, modulePath],
+            { NODE_NO_WARNINGS: '1' },
+        );
         childProcess.on('exit', code => callback(code && 'Test failed'));
     },
 );

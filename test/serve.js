@@ -1,4 +1,4 @@
-#!/usr/bin/env node --experimental-modules --no-warnings
+#!/usr/bin/env node
 
 /* eslint-env node */
 
@@ -9,16 +9,22 @@ import { networkInterfaces }        from 'os';
 import { dirname, extname, join }   from 'path';
 import { fileURLToPath }            from 'url';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const mimeTypes = { '.css': 'text/css', '.html': 'text/html', '.js': 'application/javascript' };
 const port = 8080;
-
+const pathDir = dirname(dirname(fileURLToPath(import.meta.url)));
 createServer
 (
-    (request, response) =>
+    ({ url }, response) =>
     {
-        const requestUrl = request.url.replace(/\?.*/s, '');
-        const pathname = join(__dirname, requestUrl);
+        const requestPath = fileURLToPath(new URL(url, 'file:'));
+        if (requestPath === '/favicon.ico')
+        {
+            const headers = { 'Content-Type': 'image/x-icon' };
+            response.writeHead(204, headers);
+            response.end();
+            return;
+        }
+        const pathname = join(pathDir, requestPath);
         const stream = createReadStream(pathname);
         stream.on
         (
@@ -27,7 +33,7 @@ createServer
             {
                 const headers = { };
                 {
-                    const ext = extname(requestUrl);
+                    const ext = extname(requestPath);
                     if (mimeTypes.hasOwnProperty(ext))
                         headers['Content-Type'] = mimeTypes[ext];
                 }
