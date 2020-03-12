@@ -24,7 +24,7 @@ function areAncestorsDisplayed(node)
             if (!node)
                 return false;
         }
-        if (getComputedStyle(node).display === 'none')
+        if (node.hidden)
             return false;
     }
 }
@@ -101,8 +101,7 @@ function processCandidates()
 
 function traverseCandidate(candidate, animatedElements)
 {
-    const computedStyle = getComputedStyle(candidate);
-    if (computedStyle.display !== 'none')
+    if (!candidate.hidden)
     {
         animatedElements.push(candidate);
         for (const child of candidate.children)
@@ -123,40 +122,21 @@ let candidateAll = false;
 
 const { window } = new jsdom.JSDOM('', { pretendToBeVisual: true });
 {
-    function setDisplayAndCandidateForAnimationstart(value)
+    function setHiddentAndCandidateForAnimationstart(value)
     {
-        setDisplay.call(this, value);
-        if (value !== 'none')
+        value = Boolean(value);
+        setHidden.call(this, value);
+        if (!value)
             candidateAllForAnimationstart();
     }
 
-    function setDisplaySetter(set)
-    {
-        descriptor.set = set;
-        Object.defineProperty(prototype, 'display', descriptor);
-    }
-
-    const { prototype } = window.CSSStyleDeclaration;
-    const descriptor = Object.getOwnPropertyDescriptor(prototype, 'display');
-    const setDisplay = descriptor.set;
-    setDisplaySetter(setDisplayAndCandidateForAnimationstart);
-    const { getComputedStyle } = window;
-    window.getComputedStyle =
-    function (...args)
-    {
-        setDisplaySetter(setDisplay);
-        try
-        {
-            const computedStyle = getComputedStyle.apply(this, args);
-            return computedStyle;
-        }
-        finally
-        {
-            setDisplaySetter(setDisplayAndCandidateForAnimationstart);
-        }
-    };
+    const { prototype } = window.HTMLElement;
+    const descriptor = Object.getOwnPropertyDescriptor(prototype, 'hidden');
+    const setHidden = descriptor.set;
+    descriptor.set = setHiddentAndCandidateForAnimationstart;
+    Object.defineProperty(prototype, 'hidden', descriptor);
 }
-const { Element, Event, HTMLIFrameElement, Node, getComputedStyle, top } = window;
+const { Element, Event, HTMLIFrameElement, Node, top } = window;
 {
     const { prototype } = Node;
     const { appendChild } = prototype;
@@ -172,10 +152,7 @@ const { Element, Event, HTMLIFrameElement, Node, getComputedStyle, top } = windo
 Element.prototype.getClientRects =
 function ()
 {
-    const list =
-    this.isConnected && areAncestorsDisplayed(this) && getComputedStyle(this).display !== 'none' ?
-    [{ }] :
-    [];
+    const list = this.isConnected && areAncestorsDisplayed(this) && !this.hidden ? [{ }] : [];
     return list;
 };
 Object.setPrototypeOf(global, window);

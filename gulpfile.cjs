@@ -57,8 +57,13 @@ task
         fork
         (
             c8Path,
-            ['--reporter=html', '--reporter=text-summary', process.execPath, modulePath],
-            { NODE_NO_WARNINGS: '1' },
+            [
+                '--reporter=html',
+                '--reporter=text-summary',
+                process.execPath,
+                '--no-warnings',
+                modulePath,
+            ],
         );
         childProcess.on('exit', code => callback(code && 'Test failed'));
     },

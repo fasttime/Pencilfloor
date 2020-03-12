@@ -275,249 +275,6 @@ describe
 
         describe
         (
-            'create',
-            () =>
-            {
-                it
-                (
-                    'has expected properties',
-                    () =>
-                    {
-                        const { create } = Pencilfloor;
-                        assert.include(create, { length: 1, name: 'create' });
-                        assert.isNotConstructible(create);
-                    },
-                );
-
-                describe
-                (
-                    'width',
-                    () =>
-                    {
-                        function testWidth(createParams, expected)
-                        {
-                            const pencilfloor = Pencilfloor.create(createParams);
-                            const message =
-                            `Pencilfloor.create(${JSON.stringify(createParams)}).width`;
-                            assert.sameValue(pencilfloor.width, expected, message);
-                        }
-
-                        it
-                        (
-                            'is DEFAULT_WIDTH by default',
-                            () =>
-                            {
-                                const { DEFAULT_WIDTH } = Pencilfloor;
-                                testWidth(undefined, DEFAULT_WIDTH);
-                                testWidth({ width: -1 }, DEFAULT_WIDTH);
-                                testWidth({ width: 0x100000000 - 1 }, DEFAULT_WIDTH);
-                            },
-                        );
-                        it
-                        (
-                            'is converted into a 32-bit positive integer',
-                            () =>
-                            {
-                                testWidth({ width: '42.9' }, 42);
-                                testWidth({ width: 0x100000000 + 43 }, 43);
-                                testWidth({ width: NaN }, 0);
-                                testWidth({ width: Infinity }, 0);
-                            },
-                        );
-                    },
-                );
-
-                describe
-                (
-                    'height',
-                    () =>
-                    {
-                        function testHeight(createParams, expected)
-                        {
-                            const pencilfloor = Pencilfloor.create(createParams);
-                            const message =
-                            `Pencilfloor.create(${JSON.stringify(createParams)}).height`;
-                            assert.sameValue(pencilfloor.height, expected, message);
-                        }
-
-                        it
-                        (
-                            'is DEFAULT_HEIGHT by default',
-                            () =>
-                            {
-                                const { DEFAULT_HEIGHT } = Pencilfloor;
-                                testHeight(undefined, DEFAULT_HEIGHT);
-                                testHeight({ height: -1 }, DEFAULT_HEIGHT);
-                                testHeight({ height: 0x100000000 - 1 }, DEFAULT_HEIGHT);
-                            },
-                        );
-                        it
-                        (
-                            'is converted into a 32-bit positive integer',
-                            () =>
-                            {
-                                testHeight({ height: '42.9' }, 42);
-                                testHeight({ height: 0x100000000 + 43 }, 43);
-                                testHeight({ height: NaN }, 0);
-                                testHeight({ height: Infinity }, 0);
-                            },
-                        );
-                    },
-                );
-
-                describe
-                (
-                    'pencilSize',
-                    () =>
-                    {
-                        function testPencilSize(createParams, expected)
-                        {
-                            const pencilfloor = Pencilfloor.create(createParams);
-                            const message =
-                            `Pencilfloor.create(${JSON.stringify(createParams)}).pencilSize`;
-                            assert.sameValue(pencilfloor.pencilSize, expected, message);
-                        }
-
-                        it
-                        (
-                            'is DEFAULT_PENCIL_SIZE by default',
-                            () =>
-                            {
-                                const { DEFAULT_PENCIL_SIZE } = Pencilfloor;
-                                testPencilSize(undefined, DEFAULT_PENCIL_SIZE);
-                                testPencilSize({ pencilSize: NaN }, DEFAULT_PENCIL_SIZE);
-                                testPencilSize({ pencilSize: 'foo' }, DEFAULT_PENCIL_SIZE);
-                            },
-                        );
-                        it
-                        (
-                            'is not negative',
-                            () =>
-                            {
-                                testPencilSize({ pencilSize: -42 }, 0);
-                                testPencilSize({ pencilSize: -0 }, 0);
-                                testPencilSize({ pencilSize: -Infinity }, 0);
-                            },
-                        );
-                        it
-                        (
-                            'is not larger than half the width',
-                            () =>
-                            {
-                                testPencilSize({ pencilSize: Infinity, width: 99 }, 49.5);
-                                testPencilSize({ width: 1 }, 0.5);
-                                testPencilSize({ width: 0 }, 0);
-                            },
-                        );
-                        it
-                        (
-                            'is not larger than half the height',
-                            () =>
-                            {
-                                testPencilSize({ pencilSize: Infinity, height: 99 }, 49.5);
-                                testPencilSize({ height: 1 }, 0.5);
-                                testPencilSize({ height: 0 }, 0);
-                            },
-                        );
-                    },
-                );
-
-                describe
-                (
-                    'pencils',
-                    () =>
-                    {
-                        it
-                        (
-                            'have default colors',
-                            () =>
-                            {
-                                assert.deepEqual
-                                (
-                                    Pencilfloor.create().pencils.map(({ color }) => color),
-                                    ['rgb(255, 128, 0)', 'rgb(0, 255, 0)', 'rgb(128, 0, 255)'],
-                                );
-                            },
-                        );
-                        it
-                        (
-                            'have no alpha channel',
-                            () =>
-                            {
-                                const createParams =
-                                {
-                                    pencils:
-                                    [
-                                        { color: 'rgba(255,0,0,0.5)', x: 0, y: 0 },
-                                        { color: 'transparent', x: 1, y: 0 },
-                                        { color: 'hsla(120,100%,50%,0.023529411)', x: 2, y: 0 },
-                                    ],
-                                };
-                                const { pencils } = Pencilfloor.create(createParams);
-                                assert.equal(pencils[0].color, 'rgb(255, 0, 0)');
-                                assert.equal(pencils[1].color, 'rgb(0, 0, 0)');
-                                assert.equal(pencils[2].color, 'rgb(0, 255, 0)');
-                            },
-                        );
-                        it
-                        (
-                            'must lie withing the allowed ranges',
-                            () =>
-                            {
-                                function testPencilOutOfRange(x, y, coordinate)
-                                {
-                                    assert.throws
-                                    (
-                                        () => Pencilfloor.create({ pencils: [{ x, y }] }),
-                                        `Pencil ${coordinate}-position `,
-                                    );
-                                }
-
-                                testPencilOutOfRange(NaN, 0, 'X');
-                                testPencilOutOfRange(100, 0, 'X');
-                                testPencilOutOfRange(-100, 0, 'X');
-                                testPencilOutOfRange(0, NaN, 'Y');
-                                testPencilOutOfRange(0, 100, 'Y');
-                                testPencilOutOfRange(0, -100, 'Y');
-                            },
-                        );
-                        it
-                        (
-                            'cannot overlap',
-                            () =>
-                            {
-                                assert.throws
-                                (
-                                    () => Pencilfloor.create
-                                    ({ pencils: [{ x: 0, y: 0 }, { x: 0.5, y: 0.5 }] }),
-                                    /^Pencils .* and .* overlap/,
-                                );
-                            },
-                        );
-                        it
-                        (
-                            'cannot be a defined primitive',
-                            () =>
-                            {
-                                assert.throws
-                                (
-                                    () => Pencilfloor.create({ pencils: 4 }),
-                                    TypeError,
-                                    RegExp
-                                    (
-                                        '^Parameter "pencils" must be an iterable or a function ' +
-                                        'returning an iterable$',
-                                    ),
-                                );
-                            },
-                        );
-                    },
-                );
-            },
-        );
-
-        describe
-        (
             'defaultArrangePencils',
             () =>
             {
@@ -577,9 +334,264 @@ describe
             },
         );
 
-        it('instanceof', () => assert.instanceOf(Pencilfloor.create(), Pencilfloor));
+        it
+        (
+            'height',
+            () =>
+            assert.setterThrows(document.createElement('HTML-PENCILFLOOR'), 'height', 0, TypeError),
+        );
 
-        it('height', () => assert.setterThrows(Pencilfloor.create(), 'height', 0, TypeError));
+        describe
+        (
+            'init',
+            () =>
+            {
+                it
+                (
+                    'has expected properties',
+                    () =>
+                    {
+                        const { init } = Pencilfloor.prototype;
+                        assert.include(init, { length: 1, name: 'init' });
+                        assert.isNotConstructible(init);
+                    },
+                );
+
+                describe
+                (
+                    'width',
+                    () =>
+                    {
+                        function testWidth(initParams, expected)
+                        {
+                            const pencilfloor =
+                            document.createElement('HTML-PENCILFLOOR').init(initParams);
+                            const message = `.init(${JSON.stringify(initParams)}).width`;
+                            assert.sameValue(pencilfloor.width, expected, message);
+                        }
+
+                        it
+                        (
+                            'is DEFAULT_WIDTH by default',
+                            () =>
+                            {
+                                const { DEFAULT_WIDTH } = Pencilfloor;
+                                testWidth(undefined, DEFAULT_WIDTH);
+                                testWidth({ width: -1 }, DEFAULT_WIDTH);
+                                testWidth({ width: 0x100000000 - 1 }, DEFAULT_WIDTH);
+                            },
+                        );
+                        it
+                        (
+                            'is converted into a 32-bit positive integer',
+                            () =>
+                            {
+                                testWidth({ width: '42.9' }, 42);
+                                testWidth({ width: 0x100000000 + 43 }, 43);
+                                testWidth({ width: NaN }, 0);
+                                testWidth({ width: Infinity }, 0);
+                            },
+                        );
+                    },
+                );
+
+                describe
+                (
+                    'height',
+                    () =>
+                    {
+                        function testHeight(initParams, expected)
+                        {
+                            const pencilfloor =
+                            document.createElement('HTML-PENCILFLOOR').init(initParams);
+                            const message = `.init(${JSON.stringify(initParams)}).height`;
+                            assert.sameValue(pencilfloor.height, expected, message);
+                        }
+
+                        it
+                        (
+                            'is DEFAULT_HEIGHT by default',
+                            () =>
+                            {
+                                const { DEFAULT_HEIGHT } = Pencilfloor;
+                                testHeight(undefined, DEFAULT_HEIGHT);
+                                testHeight({ height: -1 }, DEFAULT_HEIGHT);
+                                testHeight({ height: 0x100000000 - 1 }, DEFAULT_HEIGHT);
+                            },
+                        );
+                        it
+                        (
+                            'is converted into a 32-bit positive integer',
+                            () =>
+                            {
+                                testHeight({ height: '42.9' }, 42);
+                                testHeight({ height: 0x100000000 + 43 }, 43);
+                                testHeight({ height: NaN }, 0);
+                                testHeight({ height: Infinity }, 0);
+                            },
+                        );
+                    },
+                );
+
+                describe
+                (
+                    'pencilSize',
+                    () =>
+                    {
+                        function testPencilSize(initParams, expected)
+                        {
+                            const pencilfloor =
+                            document.createElement('HTML-PENCILFLOOR').init(initParams);
+                            const message = `.init(${JSON.stringify(initParams)}).pencilSize`;
+                            assert.sameValue(pencilfloor.pencilSize, expected, message);
+                        }
+
+                        it
+                        (
+                            'is DEFAULT_PENCIL_SIZE by default',
+                            () =>
+                            {
+                                const { DEFAULT_PENCIL_SIZE } = Pencilfloor;
+                                testPencilSize(undefined, DEFAULT_PENCIL_SIZE);
+                                testPencilSize({ pencilSize: NaN }, DEFAULT_PENCIL_SIZE);
+                                testPencilSize({ pencilSize: 'foo' }, DEFAULT_PENCIL_SIZE);
+                            },
+                        );
+                        it
+                        (
+                            'is not negative',
+                            () =>
+                            {
+                                testPencilSize({ pencilSize: -42 }, 0);
+                                testPencilSize({ pencilSize: -0 }, 0);
+                                testPencilSize({ pencilSize: -Infinity }, 0);
+                            },
+                        );
+                        it
+                        (
+                            'is not larger than half the width',
+                            () =>
+                            {
+                                testPencilSize({ pencilSize: Infinity, width: 99 }, 49.5);
+                                testPencilSize({ width: 1 }, 0.5);
+                                testPencilSize({ width: 0 }, 0);
+                            },
+                        );
+                        it
+                        (
+                            'is not larger than half the height',
+                            () =>
+                            {
+                                testPencilSize({ pencilSize: Infinity, height: 99 }, 49.5);
+                                testPencilSize({ height: 1 }, 0.5);
+                                testPencilSize({ height: 0 }, 0);
+                            },
+                        );
+                    },
+                );
+
+                describe
+                (
+                    'pencils',
+                    () =>
+                    {
+                        it
+                        (
+                            'have default colors',
+                            () =>
+                            {
+                                assert.deepEqual
+                                (
+                                    document
+                                    .createElement('HTML-PENCILFLOOR')
+                                    .pencils.map(({ color }) => color),
+                                    ['rgb(255, 128, 0)', 'rgb(0, 255, 0)', 'rgb(128, 0, 255)'],
+                                );
+                            },
+                        );
+                        it
+                        (
+                            'have no alpha channel',
+                            () =>
+                            {
+                                const initParams =
+                                {
+                                    pencils:
+                                    [
+                                        { color: 'rgba(255,0,0,0.5)', x: 0, y: 0 },
+                                        { color: 'transparent', x: 1, y: 0 },
+                                        { color: 'hsla(120,100%,50%,0.023529411)', x: 2, y: 0 },
+                                    ],
+                                };
+                                const { pencils } =
+                                document.createElement('HTML-PENCILFLOOR').init(initParams);
+                                assert.equal(pencils[0].color, 'rgb(255, 0, 0)');
+                                assert.equal(pencils[1].color, 'rgb(0, 0, 0)');
+                                assert.equal(pencils[2].color, 'rgb(0, 255, 0)');
+                            },
+                        );
+                        it
+                        (
+                            'must lie withing the allowed ranges',
+                            () =>
+                            {
+                                function testPencilOutOfRange(x, y, coordinate)
+                                {
+                                    assert.throws
+                                    (
+                                        () =>
+                                        document
+                                        .createElement('HTML-PENCILFLOOR')
+                                        .init({ pencils: [{ x, y }] }),
+                                        `Pencil ${coordinate}-position `,
+                                    );
+                                }
+
+                                testPencilOutOfRange(NaN, 0, 'X');
+                                testPencilOutOfRange(100, 0, 'X');
+                                testPencilOutOfRange(-100, 0, 'X');
+                                testPencilOutOfRange(0, NaN, 'Y');
+                                testPencilOutOfRange(0, 100, 'Y');
+                                testPencilOutOfRange(0, -100, 'Y');
+                            },
+                        );
+                        it
+                        (
+                            'cannot overlap',
+                            () =>
+                            {
+                                assert.throws
+                                (
+                                    () =>
+                                    document
+                                    .createElement('HTML-PENCILFLOOR')
+                                    .init({ pencils: [{ x: 0, y: 0 }, { x: 0.5, y: 0.5 }] }),
+                                    /^Pencils .* and .* overlap/,
+                                );
+                            },
+                        );
+                        it
+                        (
+                            'cannot be a defined primitive',
+                            () =>
+                            {
+                                assert.throws
+                                (
+                                    () =>
+                                    document.createElement('HTML-PENCILFLOOR').init({ pencils: 4 }),
+                                    TypeError,
+                                    RegExp
+                                    (
+                                        '^Parameter "pencils" must be an iterable or a function ' +
+                                        'returning an iterable$',
+                                    ),
+                                );
+                            },
+                        );
+                    },
+                );
+            },
+        );
 
         describe
         (
@@ -589,7 +601,9 @@ describe
                 it
                 (
                     'is read-only',
-                    () => assert.setterThrows(Pencilfloor.create(), 'instant', 0, TypeError),
+                    () =>
+                    assert.setterThrows
+                    (document.createElement('HTML-PENCILFLOOR'), 'instant', 0, TypeError),
                 );
                 it
                 (
@@ -598,7 +612,8 @@ describe
                     (
                         async container =>
                         {
-                            const pencilfloor = container.appendChild(Pencilfloor.create());
+                            const pencilfloor =
+                            container.appendChild(document.createElement('HTML-PENCILFLOOR'));
                             pencilfloor.play();
                             assert.strictEqual((await captureInstant(pencilfloor)).instant, 1);
                         },
@@ -609,10 +624,16 @@ describe
 
         it
         (
+            'instanceof',
+            () => assert.instanceOf(document.createElement('HTML-PENCILFLOOR'), Pencilfloor),
+        );
+
+        it
+        (
             'instantRate',
             () =>
             {
-                const pencilfloor = Pencilfloor.create();
+                const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                 assert.sameValue(pencilfloor.instantRate, Pencilfloor.DEFAULT_INSTANT_RATE);
                 assert.setterThrows(pencilfloor, 'instantRate', -Number.MIN_VALUE, RangeError);
                 assert.setterThrows(pencilfloor, 'instantRate', 1 + Number.EPSILON, RangeError);
@@ -634,7 +655,7 @@ describe
             'interactive',
             () =>
             {
-                const pencilfloor = Pencilfloor.create();
+                const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                 assert.isTrue(pencilfloor.interactive);
                 assert.setterSets(pencilfloor, 'interactive', false);
                 assert.setterSets(pencilfloor, 'interactive', true);
@@ -654,7 +675,7 @@ describe
                     'has expected properties',
                     () =>
                     {
-                        const { pause } = Pencilfloor.create();
+                        const { pause } = document.createElement('HTML-PENCILFLOOR');
                         assert.include(pause, { length: 0, name: 'pause' });
                         assert.isNotConstructible(pause);
                     },
@@ -664,7 +685,7 @@ describe
                     'works',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create();
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                         simulateKeydown(pencilfloor);
                         assert.firesEvent(() => pencilfloor.pause(), pencilfloor, 'pause');
                         assert.isTrue(pencilfloor.paused);
@@ -676,7 +697,7 @@ describe
                     'does nothing if already paused',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create();
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                         pencilfloor.play();
                         simulateKeydown(pencilfloor);
                         assert.doesNotFireEvent(() => pencilfloor.pause(), pencilfloor, 'pause');
@@ -692,13 +713,18 @@ describe
             'paused',
             () =>
             {
-                const pencilfloor = Pencilfloor.create();
+                const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                 assert.setterThrows(pencilfloor, 'paused', false, TypeError);
             },
         );
 
         it
-        ('pencilSize', () => assert.setterThrows(Pencilfloor.create(), 'pencilSize', 0, TypeError));
+        (
+            'pencilSize',
+            () =>
+            assert.setterThrows
+            (document.createElement('HTML-PENCILFLOOR'), 'pencilSize', 0, TypeError),
+        );
 
         describe
         (
@@ -708,14 +734,16 @@ describe
                 it
                 (
                     'is read-only',
-                    () => assert.setterThrows(Pencilfloor.create(), 'pencils', [], TypeError),
+                    () =>
+                    assert.setterThrows
+                    (document.createElement('HTML-PENCILFLOOR'), 'pencils', [], TypeError),
                 );
                 it
                 (
                     'gets new objects on every access',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create();
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                         const pencils1 = pencilfloor.pencils;
                         const pencils2 = pencilfloor.pencils;
                         assert
@@ -733,7 +761,7 @@ describe
                     (
                         async container =>
                         {
-                            const createParams =
+                            const initParams =
                             {
                                 pencils:
                                 [
@@ -744,7 +772,8 @@ describe
                                 height: 50,
                             };
                             const pencilfloor =
-                            container.appendChild(Pencilfloor.create(createParams));
+                            document.createElement('HTML-PENCILFLOOR').init(initParams);
+                            container.appendChild(pencilfloor);
                             pencilfloor.quickness = 1;
                             pencilfloor.play();
                             {
@@ -779,7 +808,7 @@ describe
                     'has expected properties',
                     () =>
                     {
-                        const { play } = Pencilfloor.create();
+                        const { play } = document.createElement('HTML-PENCILFLOOR');
                         assert.include(play, { length: 0, name: 'play' });
                         assert.isNotConstructible(play);
                     },
@@ -789,7 +818,7 @@ describe
                     'works',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create();
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                         pencilfloor.play();
                         simulateKeydown(pencilfloor);
                         assert.firesEvent(() => pencilfloor.play(), pencilfloor, 'play');
@@ -802,7 +831,7 @@ describe
                     'does nothing if already playing',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create();
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                         simulateKeydown(pencilfloor);
                         assert.doesNotFireEvent(() => pencilfloor.play(), pencilfloor, 'play');
                         assert.isFalse(pencilfloor.paused);
@@ -814,7 +843,8 @@ describe
                     'does nothing if there are no pecils',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create({ pencils: [] });
+                        const pencilfloor =
+                        document.createElement('HTML-PENCILFLOOR').init({ pencils: [] });
                         assert.doesNotFireEvent(() => pencilfloor.play(), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
                     },
@@ -824,7 +854,10 @@ describe
                     'does nothing if there is only one pencil',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create({ pencils: [{ x: 0, y: 0 }] });
+                        const pencilfloor =
+                        document
+                        .createElement('HTML-PENCILFLOOR')
+                        .init({ pencils: [{ x: 0, y: 0 }] });
                         assert.doesNotFireEvent(() => pencilfloor.play(), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
                     },
@@ -837,7 +870,7 @@ describe
             'quickness',
             () =>
             {
-                const pencilfloor = Pencilfloor.create();
+                const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                 assert.sameValue(pencilfloor.quickness, Pencilfloor.DEFAULT_QUICKNESS);
                 assert.setterThrows(pencilfloor, 'quickness', -Number.MIN_VALUE, RangeError);
                 assert.setterThrows(pencilfloor, 'quickness', 1 + Number.EPSILON, RangeError);
@@ -854,7 +887,12 @@ describe
             },
         );
 
-        it('width', () => assert.setterThrows(Pencilfloor.create(), 'width', 0, TypeError));
+        it
+        (
+            'width',
+            () =>
+            assert.setterThrows(document.createElement('HTML-PENCILFLOOR'), 'width', 0, TypeError),
+        );
 
         describe
         (
@@ -868,7 +906,8 @@ describe
                     (
                         async container =>
                         {
-                            const pencilfloor = container.appendChild(Pencilfloor.create());
+                            const pencilfloor =
+                            container.appendChild(document.createElement('HTML-PENCILFLOOR'));
                             await assert.doesNotFireInstantEvent(pencilfloor, 'before play()');
                             pencilfloor.play();
                             await assert.firesInstantEvent(pencilfloor, 'after play()');
@@ -884,7 +923,7 @@ describe
                     (
                         async container =>
                         {
-                            const pencilfloor = Pencilfloor.create();
+                            const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                             pencilfloor.play();
                             await
                             assert.doesNotFireInstantEvent(pencilfloor, 'before attaching element');
@@ -903,14 +942,14 @@ describe
                     (
                         async container =>
                         {
-                            const pencilfloor = container.appendChild(Pencilfloor.create());
-                            const { style } = pencilfloor;
-                            style.display = 'none';
+                            const pencilfloor =
+                            container.appendChild(document.createElement('HTML-PENCILFLOOR'));
+                            pencilfloor.hidden = true;
                             pencilfloor.play();
                             await assert.doesNotFireInstantEvent(pencilfloor, 'before displaying');
-                            style.display = '';
+                            pencilfloor.hidden = false;
                             await assert.firesInstantEvent(pencilfloor, 'after displaying');
-                            style.display = 'none';
+                            pencilfloor.hidden = true;
                             await assert.doesNotFireInstantEvent(pencilfloor, 'after undisplaying');
                         },
                     ),
@@ -922,17 +961,17 @@ describe
                     (
                         async container =>
                         {
-                            const { style } = container;
-                            style.display = 'none';
-                            const pencilfloor = container.appendChild(Pencilfloor.create());
+                            container.hidden = true;
+                            const pencilfloor =
+                            container.appendChild(document.createElement('HTML-PENCILFLOOR'));
                             pencilfloor.play();
                             await
                             assert.doesNotFireInstantEvent
                             (pencilfloor, 'before displaying ancestors');
-                            style.display = '';
+                            container.hidden = false;
                             await
                             assert.firesInstantEvent(pencilfloor, 'after displaying ancestors');
-                            style.display = 'none';
+                            container.hidden = true;
                             await
                             assert.doesNotFireInstantEvent
                             (pencilfloor, 'after undisplaying ancestors');
@@ -946,7 +985,7 @@ describe
                     (
                         async container =>
                         {
-                            const pencilfloor = Pencilfloor.create();
+                            const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                             pencilfloor.play();
                             container.appendChild(pencilfloor);
                             getBase(pencilfloor)
@@ -962,7 +1001,8 @@ describe
                     (
                         async container =>
                         {
-                            const pencilfloor = container.appendChild(Pencilfloor.create());
+                            const pencilfloor =
+                            container.appendChild(document.createElement('HTML-PENCILFLOOR'));
                             pencilfloor.instantRate = 0;
                             pencilfloor.play();
                             await assert.doesNotFireInstantEvent(pencilfloor);
@@ -977,8 +1017,8 @@ describe
                         createInteractiveIframe,
                         async iframe =>
                         {
-                            const pencilfloor =
-                            iframe.contentDocument.body.appendChild(Pencilfloor.create());
+                            const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                            iframe.contentDocument.body.appendChild(pencilfloor);
                             pencilfloor.play();
                             await assert.firesInstantEvent(pencilfloor);
                         },
@@ -992,8 +1032,8 @@ describe
                         createInteractiveIframe,
                         async iframe =>
                         {
-                            const pencilfloor =
-                            iframe.contentDocument.body.appendChild(Pencilfloor.create());
+                            const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                            iframe.contentDocument.body.appendChild(pencilfloor);
                             iframe.remove();
                             pencilfloor.play();
                             await assert.doesNotFireInstantEvent(pencilfloor);
@@ -1005,7 +1045,7 @@ describe
                     (() =>
                     {
                         const iframe = document.body.appendChild(document.createElement('IFRAME'));
-                        iframe.style.display = 'none';
+                        iframe.hidden = true;
                         const undisplayed =
                         !iframe.contentDocument.documentElement.getClientRects().length;
                         iframe.remove();
@@ -1018,9 +1058,9 @@ describe
                         createInteractiveIframe,
                         async iframe =>
                         {
-                            iframe.style.display = 'none';
-                            const pencilfloor =
-                            iframe.contentDocument.body.appendChild(Pencilfloor.create());
+                            iframe.hidden = true;
+                            const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                            iframe.contentDocument.body.appendChild(pencilfloor);
                             pencilfloor.play();
                             await assert.doesNotFireInstantEvent(pencilfloor);
                         },
@@ -1053,7 +1093,7 @@ describe
                         container =>
                         testSize
                         (
-                            container.appendChild(Pencilfloor.create()),
+                            container.appendChild(document.createElement('HTML-PENCILFLOOR')),
                             Pencilfloor.DEFAULT_WIDTH,
                             Pencilfloor.DEFAULT_HEIGHT,
                         ),
@@ -1067,7 +1107,12 @@ describe
                         container =>
                         testSize
                         (
-                            container.appendChild(Pencilfloor.create({ width: 0, height: 0 })),
+                            container.appendChild
+                            (
+                                document
+                                .createElement('HTML-PENCILFLOOR')
+                                .init({ width: 0, height: 0 }),
+                            ),
                             0,
                             0,
                         ),
@@ -1082,7 +1127,8 @@ describe
                         {
                             const EXPECTED_WIDTH = Pencilfloor.DEFAULT_WIDTH / 2;
 
-                            const pencilfloor = container.appendChild(Pencilfloor.create());
+                            const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                            container.appendChild(pencilfloor);
                             pencilfloor.style.width = `${EXPECTED_WIDTH}px`;
                             testSize(pencilfloor, EXPECTED_WIDTH, Pencilfloor.DEFAULT_HEIGHT);
                         },
@@ -1097,7 +1143,8 @@ describe
                         {
                             const EXPECTED_WIDTH = Pencilfloor.DEFAULT_WIDTH * 2;
 
-                            const pencilfloor = container.appendChild(Pencilfloor.create());
+                            const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                            container.appendChild(pencilfloor);
                             pencilfloor.style.width = `${EXPECTED_WIDTH}px`;
                             testSize(pencilfloor, EXPECTED_WIDTH, Pencilfloor.DEFAULT_HEIGHT);
                         },
@@ -1112,7 +1159,8 @@ describe
                         {
                             const EXPECTED_HEIGHT = Pencilfloor.DEFAULT_HEIGHT / 2;
 
-                            const pencilfloor = container.appendChild(Pencilfloor.create());
+                            const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                            container.appendChild(pencilfloor);
                             pencilfloor.style.height = `${EXPECTED_HEIGHT}px`;
                             testSize(pencilfloor, Pencilfloor.DEFAULT_WIDTH, EXPECTED_HEIGHT);
                         },
@@ -1127,7 +1175,8 @@ describe
                         {
                             const EXPECTED_HEIGHT = Pencilfloor.DEFAULT_HEIGHT * 2;
 
-                            const pencilfloor = container.appendChild(Pencilfloor.create());
+                            const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                            container.appendChild(pencilfloor);
                             pencilfloor.style.height = `${EXPECTED_HEIGHT}px`;
                             testSize(pencilfloor, Pencilfloor.DEFAULT_WIDTH, EXPECTED_HEIGHT);
                         },
@@ -1146,7 +1195,7 @@ describe
                     'toggles from paused to playing',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create();
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                         assert.firesEvent
                         (() => simulateMousedown(pencilfloor), pencilfloor, 'play');
                         assert.isFalse(pencilfloor.paused);
@@ -1160,7 +1209,7 @@ describe
                     'toggles from playing to paused',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create();
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                         pencilfloor.play();
                         assert.firesEvent
                         (() => simulateMousedown(pencilfloor), pencilfloor, 'pause');
@@ -1175,7 +1224,7 @@ describe
                     'does not toggle play when not interactive',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create();
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                         pencilfloor.interactive = false;
                         assert.doesNotFireEvent
                         (() => simulateMousedown(pencilfloor), pencilfloor, 'play');
@@ -1196,7 +1245,7 @@ describe
                     'toggles from paused to playing',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create();
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                         assert.firesEvent(() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isFalse(pencilfloor.paused);
                         const icon = getOverlayIcon(pencilfloor);
@@ -1209,7 +1258,7 @@ describe
                     'toggles from playing to paused',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create();
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                         pencilfloor.play();
                         assert.firesEvent(() => simulateKeydown(pencilfloor), pencilfloor, 'pause');
                         assert.isTrue(pencilfloor.paused);
@@ -1223,7 +1272,7 @@ describe
                     'does nothing if not interactive',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create();
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
                         pencilfloor.interactive = false;
                         assert.doesNotFireEvent
                         (() => simulateKeydown(pencilfloor), pencilfloor, 'play');
@@ -1236,7 +1285,8 @@ describe
                     'does nothing if there are no pencils',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create({ pencils: [] });
+                        const pencilfloor =
+                        document.createElement('HTML-PENCILFLOOR').init({ pencils: [] });
                         assert.doesNotFireEvent
                         (() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
@@ -1248,7 +1298,10 @@ describe
                     'does nothing if there is only one pencil',
                     () =>
                     {
-                        const pencilfloor = Pencilfloor.create({ pencils: [{ x: 0, y: 0 }] });
+                        const pencilfloor =
+                        document
+                        .createElement('HTML-PENCILFLOOR')
+                        .init({ pencils: [{ x: 0, y: 0 }] });
                         assert.doesNotFireEvent
                         (() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
@@ -1289,7 +1342,15 @@ describe
                     (
                         container =>
                         testOverlayIconPosition
-                        (container.appendChild(Pencilfloor.create({ width: 256, height: 64 })), 42),
+                        (
+                            container.appendChild
+                            (
+                                document
+                                .createElement('HTML-PENCILFLOOR')
+                                .init({ width: 256, height: 64 }),
+                            ),
+                            42,
+                        ),
                     ),
                 );
                 it
@@ -1300,7 +1361,12 @@ describe
                         container =>
                         testOverlayIconPosition
                         (
-                            container.appendChild(Pencilfloor.create({ width: 200, height: 400 })),
+                            container.appendChild
+                            (
+                                document
+                                .createElement('HTML-PENCILFLOOR')
+                                .init({ width: 200, height: 400 }),
+                            ),
                             66,
                         ),
                     ),
@@ -1312,7 +1378,15 @@ describe
                     (
                         container =>
                         testOverlayIconPosition
-                        (container.appendChild(Pencilfloor.create({ width: 50, height: 400 })), 50),
+                        (
+                            container.appendChild
+                            (
+                                document
+                                .createElement('HTML-PENCILFLOOR')
+                                .init({ width: 50, height: 400 }),
+                            ),
+                            50,
+                        ),
                     ),
                 );
                 it
@@ -1322,7 +1396,15 @@ describe
                     (
                         container =>
                         testOverlayIconPosition
-                        (container.appendChild(Pencilfloor.create({ width: 50, height: 400 })), 50),
+                        (
+                            container.appendChild
+                            (
+                                document
+                                .createElement('HTML-PENCILFLOOR')
+                                .init({ width: 50, height: 400 }),
+                            ),
+                            50,
+                        ),
                     ),
                 );
             },
