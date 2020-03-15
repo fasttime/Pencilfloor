@@ -334,11 +334,48 @@ describe
             },
         );
 
-        it
+        describe
         (
             'height',
             () =>
-            assert.setterThrows(document.createElement('HTML-PENCILFLOOR'), 'height', 0, TypeError),
+            {
+                function testHeight(initParams, expected)
+                {
+                    const pencilfloor = document.createElement('HTML-PENCILFLOOR').init(initParams);
+                    const message = `.init(${JSON.stringify(initParams)}).height`;
+                    assert.sameValue(pencilfloor.height, expected, message);
+                }
+
+                it
+                (
+                    'is read-only',
+                    () =>
+                    assert.setterThrows
+                    (document.createElement('HTML-PENCILFLOOR'), 'height', 0, TypeError),
+                );
+                it
+                (
+                    'is DEFAULT_HEIGHT by default',
+                    () =>
+                    {
+                        const { DEFAULT_HEIGHT } = Pencilfloor;
+                        testHeight(undefined, DEFAULT_HEIGHT);
+                        testHeight({ height: -1 }, DEFAULT_HEIGHT);
+                        testHeight({ height: 0x100000000 - 1 }, DEFAULT_HEIGHT);
+                    },
+                );
+                it
+                (
+                    'is converted into a 32-bit positive integer',
+                    () =>
+                    {
+                        testHeight({ height: '42.9' }, 42);
+                        testHeight({ height: 0x100000000 + 43 }, 43);
+                        testHeight({ height: NaN }, 0);
+                        testHeight({ height: Infinity }, 0);
+                    },
+                );
+            },
         );
 
         describe
@@ -359,177 +396,9 @@ describe
 
                 describe
                 (
-                    'width',
-                    () =>
-                    {
-                        function testWidth(initParams, expected)
-                        {
-                            const pencilfloor =
-                            document.createElement('HTML-PENCILFLOOR').init(initParams);
-                            const message = `.init(${JSON.stringify(initParams)}).width`;
-                            assert.sameValue(pencilfloor.width, expected, message);
-                        }
-
-                        it
-                        (
-                            'is DEFAULT_WIDTH by default',
-                            () =>
-                            {
-                                const { DEFAULT_WIDTH } = Pencilfloor;
-                                testWidth(undefined, DEFAULT_WIDTH);
-                                testWidth({ width: -1 }, DEFAULT_WIDTH);
-                                testWidth({ width: 0x100000000 - 1 }, DEFAULT_WIDTH);
-                            },
-                        );
-                        it
-                        (
-                            'is converted into a 32-bit positive integer',
-                            () =>
-                            {
-                                testWidth({ width: '42.9' }, 42);
-                                testWidth({ width: 0x100000000 + 43 }, 43);
-                                testWidth({ width: NaN }, 0);
-                                testWidth({ width: Infinity }, 0);
-                            },
-                        );
-                    },
-                );
-
-                describe
-                (
-                    'height',
-                    () =>
-                    {
-                        function testHeight(initParams, expected)
-                        {
-                            const pencilfloor =
-                            document.createElement('HTML-PENCILFLOOR').init(initParams);
-                            const message = `.init(${JSON.stringify(initParams)}).height`;
-                            assert.sameValue(pencilfloor.height, expected, message);
-                        }
-
-                        it
-                        (
-                            'is DEFAULT_HEIGHT by default',
-                            () =>
-                            {
-                                const { DEFAULT_HEIGHT } = Pencilfloor;
-                                testHeight(undefined, DEFAULT_HEIGHT);
-                                testHeight({ height: -1 }, DEFAULT_HEIGHT);
-                                testHeight({ height: 0x100000000 - 1 }, DEFAULT_HEIGHT);
-                            },
-                        );
-                        it
-                        (
-                            'is converted into a 32-bit positive integer',
-                            () =>
-                            {
-                                testHeight({ height: '42.9' }, 42);
-                                testHeight({ height: 0x100000000 + 43 }, 43);
-                                testHeight({ height: NaN }, 0);
-                                testHeight({ height: Infinity }, 0);
-                            },
-                        );
-                    },
-                );
-
-                describe
-                (
-                    'pencilSize',
-                    () =>
-                    {
-                        function testPencilSize(initParams, expected)
-                        {
-                            const pencilfloor =
-                            document.createElement('HTML-PENCILFLOOR').init(initParams);
-                            const message = `.init(${JSON.stringify(initParams)}).pencilSize`;
-                            assert.sameValue(pencilfloor.pencilSize, expected, message);
-                        }
-
-                        it
-                        (
-                            'is DEFAULT_PENCIL_SIZE by default',
-                            () =>
-                            {
-                                const { DEFAULT_PENCIL_SIZE } = Pencilfloor;
-                                testPencilSize(undefined, DEFAULT_PENCIL_SIZE);
-                                testPencilSize({ pencilSize: NaN }, DEFAULT_PENCIL_SIZE);
-                                testPencilSize({ pencilSize: 'foo' }, DEFAULT_PENCIL_SIZE);
-                            },
-                        );
-                        it
-                        (
-                            'is not negative',
-                            () =>
-                            {
-                                testPencilSize({ pencilSize: -42 }, 0);
-                                testPencilSize({ pencilSize: -0 }, 0);
-                                testPencilSize({ pencilSize: -Infinity }, 0);
-                            },
-                        );
-                        it
-                        (
-                            'is not larger than half the width',
-                            () =>
-                            {
-                                testPencilSize({ pencilSize: Infinity, width: 99 }, 49.5);
-                                testPencilSize({ width: 1 }, 0.5);
-                                testPencilSize({ width: 0 }, 0);
-                            },
-                        );
-                        it
-                        (
-                            'is not larger than half the height',
-                            () =>
-                            {
-                                testPencilSize({ pencilSize: Infinity, height: 99 }, 49.5);
-                                testPencilSize({ height: 1 }, 0.5);
-                                testPencilSize({ height: 0 }, 0);
-                            },
-                        );
-                    },
-                );
-
-                describe
-                (
                     'pencils',
                     () =>
                     {
-                        it
-                        (
-                            'have default colors',
-                            () =>
-                            {
-                                assert.deepEqual
-                                (
-                                    document
-                                    .createElement('HTML-PENCILFLOOR')
-                                    .pencils.map(({ color }) => color),
-                                    ['rgb(255, 128, 0)', 'rgb(0, 255, 0)', 'rgb(128, 0, 255)'],
-                                );
-                            },
-                        );
-                        it
-                        (
-                            'have no alpha channel',
-                            () =>
-                            {
-                                const initParams =
-                                {
-                                    pencils:
-                                    [
-                                        { color: 'rgba(255,0,0,0.5)', x: 0, y: 0 },
-                                        { color: 'transparent', x: 1, y: 0 },
-                                        { color: 'hsla(120,100%,50%,0.023529411)', x: 2, y: 0 },
-                                    ],
-                                };
-                                const { pencils } =
-                                document.createElement('HTML-PENCILFLOOR').init(initParams);
-                                assert.equal(pencils[0].color, 'rgb(255, 0, 0)');
-                                assert.equal(pencils[1].color, 'rgb(0, 0, 0)');
-                                assert.equal(pencils[2].color, 'rgb(0, 255, 0)');
-                            },
-                        );
                         it
                         (
                             'must lie withing the allowed ranges',
@@ -718,12 +587,68 @@ describe
             },
         );
 
-        it
+        describe
         (
             'pencilSize',
             () =>
-            assert.setterThrows
-            (document.createElement('HTML-PENCILFLOOR'), 'pencilSize', 0, TypeError),
+            {
+                function testPencilSize(initParams, expected)
+                {
+                    const pencilfloor =
+                    document.createElement('HTML-PENCILFLOOR').init(initParams);
+                    const message = `.init(${JSON.stringify(initParams)}).pencilSize`;
+                    assert.sameValue(pencilfloor.pencilSize, expected, message);
+                }
+
+                it
+                (
+                    'is read-only',
+                    () =>
+                    assert.setterThrows
+                    (document.createElement('HTML-PENCILFLOOR'), 'pencilSize', 0, TypeError),
+                );
+                it
+                (
+                    'is DEFAULT_PENCIL_SIZE by default',
+                    () =>
+                    {
+                        const { DEFAULT_PENCIL_SIZE } = Pencilfloor;
+                        testPencilSize(undefined, DEFAULT_PENCIL_SIZE);
+                        testPencilSize({ pencilSize: NaN }, DEFAULT_PENCIL_SIZE);
+                        testPencilSize({ pencilSize: 'foo' }, DEFAULT_PENCIL_SIZE);
+                    },
+                );
+                it
+                (
+                    'is not negative',
+                    () =>
+                    {
+                        testPencilSize({ pencilSize: -42 }, 0);
+                        testPencilSize({ pencilSize: -0 }, 0);
+                        testPencilSize({ pencilSize: -Infinity }, 0);
+                    },
+                );
+                it
+                (
+                    'is not larger than half the width',
+                    () =>
+                    {
+                        testPencilSize({ pencilSize: Infinity, width: 99 }, 49.5);
+                        testPencilSize({ width: 1 }, 0.5);
+                        testPencilSize({ width: 0 }, 0);
+                    },
+                );
+                it
+                (
+                    'is not larger than half the height',
+                    () =>
+                    {
+                        testPencilSize({ pencilSize: Infinity, height: 99 }, 49.5);
+                        testPencilSize({ height: 1 }, 0.5);
+                        testPencilSize({ height: 0 }, 0);
+                    },
+                );
+            },
         );
 
         describe
@@ -794,6 +719,41 @@ describe
                             }
                         },
                     ),
+                );
+                it
+                (
+                    'have default colors',
+                    () =>
+                    {
+                        assert.deepEqual
+                        (
+                            document
+                            .createElement('HTML-PENCILFLOOR')
+                            .pencils.map(({ color }) => color),
+                            ['rgb(255, 128, 0)', 'rgb(0, 255, 0)', 'rgb(128, 0, 255)'],
+                        );
+                    },
+                );
+                it
+                (
+                    'have no alpha channel',
+                    () =>
+                    {
+                        const initParams =
+                        {
+                            pencils:
+                            [
+                                { color: 'rgba(255,0,0,0.5)', x: 0, y: 0 },
+                                { color: 'transparent', x: 1, y: 0 },
+                                { color: 'hsla(120,100%,50%,0.023529411)', x: 2, y: 0 },
+                            ],
+                        };
+                        const { pencils } =
+                        document.createElement('HTML-PENCILFLOOR').init(initParams);
+                        assert.equal(pencils[0].color, 'rgb(255, 0, 0)');
+                        assert.equal(pencils[1].color, 'rgb(0, 0, 0)');
+                        assert.equal(pencils[2].color, 'rgb(0, 255, 0)');
+                    },
                 );
             },
         );
@@ -887,11 +847,48 @@ describe
             },
         );
 
-        it
+        describe
         (
             'width',
             () =>
-            assert.setterThrows(document.createElement('HTML-PENCILFLOOR'), 'width', 0, TypeError),
+            {
+                function testWidth(initParams, expected)
+                {
+                    const pencilfloor = document.createElement('HTML-PENCILFLOOR').init(initParams);
+                    const message = `.init(${JSON.stringify(initParams)}).width`;
+                    assert.sameValue(pencilfloor.width, expected, message);
+                }
+
+                it
+                (
+                    'is read-only',
+                    () =>
+                    assert.setterThrows
+                    (document.createElement('HTML-PENCILFLOOR'), 'width', 0, TypeError),
+                );
+                it
+                (
+                    'is DEFAULT_WIDTH by default',
+                    () =>
+                    {
+                        const { DEFAULT_WIDTH } = Pencilfloor;
+                        testWidth(undefined, DEFAULT_WIDTH);
+                        testWidth({ width: -1 }, DEFAULT_WIDTH);
+                        testWidth({ width: 0x100000000 - 1 }, DEFAULT_WIDTH);
+                    },
+                );
+                it
+                (
+                    'is converted into a 32-bit positive integer',
+                    () =>
+                    {
+                        testWidth({ width: '42.9' }, 42);
+                        testWidth({ width: 0x100000000 + 43 }, 43);
+                        testWidth({ width: NaN }, 0);
+                        testWidth({ width: Infinity }, 0);
+                    },
+                );
+            },
         );
 
         describe
