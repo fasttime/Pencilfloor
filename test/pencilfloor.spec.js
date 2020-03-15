@@ -393,6 +393,18 @@ describe
                         assert.isNotConstructible(init);
                     },
                 );
+                it
+                (
+                    'works',
+                    () =>
+                    {
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                        pencilfloor.play();
+                        assert.doesNotFireEvent(() => pencilfloor.init(), pencilfloor, 'pause');
+                        assert.isTrue(pencilfloor.paused);
+                        assert.isNull(getOverlayIcon(pencilfloor));
+                    },
+                );
 
                 describe
                 (
@@ -401,7 +413,7 @@ describe
                     {
                         it
                         (
-                            'must lie withing the allowed ranges',
+                            'must lie within the allowed ranges',
                             () =>
                             {
                                 function testPencilOutOfRange(x, y, coordinate)
@@ -519,18 +531,36 @@ describe
             },
         );
 
-        it
+        describe
         (
             'interactive',
             () =>
             {
-                const pencilfloor = document.createElement('HTML-PENCILFLOOR');
-                assert.isTrue(pencilfloor.interactive);
-                assert.setterSets(pencilfloor, 'interactive', false);
-                assert.setterSets(pencilfloor, 'interactive', true);
-                assert.setterSets(pencilfloor, 'interactive', 0, false);
-                assert.setterSets(pencilfloor, 'interactive', [], true);
-                assert.setterSets(pencilfloor, 'interactive', undefined, false);
+                it
+                (
+                    'is writable',
+                    () =>
+                    {
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                        assert.isTrue(pencilfloor.interactive);
+                        assert.setterSets(pencilfloor, 'interactive', false);
+                        assert.setterSets(pencilfloor, 'interactive', true);
+                        assert.setterSets(pencilfloor, 'interactive', 0, false);
+                        assert.setterSets(pencilfloor, 'interactive', [], true);
+                        assert.setterSets(pencilfloor, 'interactive', undefined, false);
+                    },
+                );
+                it
+                (
+                    'does not change on init',
+                    () =>
+                    {
+                        const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                        pencilfloor.interactive = false;
+                        pencilfloor.init();
+                        assert.isFalse(pencilfloor.interactive);
+                    },
+                );
             },
         );
 
