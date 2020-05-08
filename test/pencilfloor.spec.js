@@ -238,14 +238,6 @@ function withContainer(...args)
         (false, `${subject} was expected to throw a ${errorType.name}, but ${actualMsg}`);
     };
 }
-after
-(
-    () =>
-    {
-        if (typeof opener === 'undefined')
-            window.close();
-    },
-);
 
 describe
 (
@@ -542,11 +534,12 @@ describe
                     () =>
                     {
                         const pencilfloor = document.createElement('HTML-PENCILFLOOR');
-                        assert.isTrue(pencilfloor.interactive);
-                        assert.setterSets(pencilfloor, 'interactive', false);
+                        assert.isFalse(pencilfloor.interactive);
                         assert.setterSets(pencilfloor, 'interactive', true);
-                        assert.setterSets(pencilfloor, 'interactive', 0, false);
+                        assert.setterSets(pencilfloor, 'interactive', false);
                         assert.setterSets(pencilfloor, 'interactive', [], true);
+                        assert.setterSets(pencilfloor, 'interactive', 0, false);
+                        assert.setterSets(pencilfloor, 'interactive', Symbol(), true);
                         assert.setterSets(pencilfloor, 'interactive', undefined, false);
                     },
                 );
@@ -556,9 +549,9 @@ describe
                     () =>
                     {
                         const pencilfloor = document.createElement('HTML-PENCILFLOOR');
-                        pencilfloor.interactive = false;
+                        pencilfloor.interactive = true;
                         pencilfloor.init();
-                        assert.isFalse(pencilfloor.interactive);
+                        assert.isTrue(pencilfloor.interactive);
                     },
                 );
             },
@@ -585,6 +578,7 @@ describe
                     () =>
                     {
                         const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                        pencilfloor.interactive = true;
                         simulateKeydown(pencilfloor);
                         assert.firesEvent(() => pencilfloor.pause(), pencilfloor, 'pause');
                         assert.isTrue(pencilfloor.paused);
@@ -597,6 +591,7 @@ describe
                     () =>
                     {
                         const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                        pencilfloor.interactive = true;
                         pencilfloor.play();
                         simulateKeydown(pencilfloor);
                         assert.doesNotFireEvent(() => pencilfloor.pause(), pencilfloor, 'pause');
@@ -809,6 +804,7 @@ describe
                     () =>
                     {
                         const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                        pencilfloor.interactive = true;
                         pencilfloor.play();
                         simulateKeydown(pencilfloor);
                         assert.firesEvent(() => pencilfloor.play(), pencilfloor, 'play');
@@ -822,6 +818,7 @@ describe
                     () =>
                     {
                         const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                        pencilfloor.interactive = true;
                         simulateKeydown(pencilfloor);
                         assert.doesNotFireEvent(() => pencilfloor.play(), pencilfloor, 'play');
                         assert.isFalse(pencilfloor.paused);
@@ -1223,6 +1220,7 @@ describe
                     () =>
                     {
                         const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                        pencilfloor.interactive = true;
                         assert.firesEvent
                         (() => simulateMousedown(pencilfloor), pencilfloor, 'play');
                         assert.isFalse(pencilfloor.paused);
@@ -1237,6 +1235,7 @@ describe
                     () =>
                     {
                         const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                        pencilfloor.interactive = true;
                         pencilfloor.play();
                         assert.firesEvent
                         (() => simulateMousedown(pencilfloor), pencilfloor, 'pause');
@@ -1252,7 +1251,6 @@ describe
                     () =>
                     {
                         const pencilfloor = document.createElement('HTML-PENCILFLOOR');
-                        pencilfloor.interactive = false;
                         assert.doesNotFireEvent
                         (() => simulateMousedown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
@@ -1273,6 +1271,7 @@ describe
                     () =>
                     {
                         const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                        pencilfloor.interactive = true;
                         assert.firesEvent(() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isFalse(pencilfloor.paused);
                         const icon = getOverlayIcon(pencilfloor);
@@ -1286,6 +1285,7 @@ describe
                     () =>
                     {
                         const pencilfloor = document.createElement('HTML-PENCILFLOOR');
+                        pencilfloor.interactive = true;
                         pencilfloor.play();
                         assert.firesEvent(() => simulateKeydown(pencilfloor), pencilfloor, 'pause');
                         assert.isTrue(pencilfloor.paused);
@@ -1300,7 +1300,6 @@ describe
                     () =>
                     {
                         const pencilfloor = document.createElement('HTML-PENCILFLOOR');
-                        pencilfloor.interactive = false;
                         assert.doesNotFireEvent
                         (() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
@@ -1314,6 +1313,7 @@ describe
                     {
                         const pencilfloor =
                         document.createElement('HTML-PENCILFLOOR').init({ pencils: [] });
+                        pencilfloor.interactive = true;
                         assert.doesNotFireEvent
                         (() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
@@ -1329,6 +1329,7 @@ describe
                         document
                         .createElement('HTML-PENCILFLOOR')
                         .init({ pencils: [{ x: 0, y: 0 }] });
+                        pencilfloor.interactive = true;
                         assert.doesNotFireEvent
                         (() => simulateKeydown(pencilfloor), pencilfloor, 'play');
                         assert.isTrue(pencilfloor.paused);
