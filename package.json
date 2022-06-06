@@ -32,22 +32,22 @@
     "url": "https://github.com/fasttime/pencilfloor.git"
   },
   "scripts": {
-    "build": "npm install && gulp --gulpfile gulpfile.cjs",
+    "build": "npm install && gulp",
     "test": "NODE_NO_WARNINGS=1 ./test/node-spec-runner.js",
     "test-serve": "NODE_NO_WARNINGS=1 ./test/serve.js"
   },
   "devDependencies": {
-    "@fasttime/gulp-lint": "~0.27.1",
-    "c8": "~7.1.2",
-    "canvas": "~2.6.1",
-    "chai": "~4.2.0",
-    "chalk": "~4.0.0",
-    "gulp": "~4.0.2",
-    "jsdom": "~16.2.2",
-    "mocha": "~7.1.2"
+    "@fasttime/lint": "latest",
+    "ansi-colors": "latest",
+    "c8js": "latest",
+    "canvas": "latest",
+    "chai": "latest",
+    "gulp": "latest",
+    "jsdom": "latest",
+    "mocha": "latest"
   },
   "engines": {
-    "node": ">=13.0.0"
+    "node": ">=18.0.0"
   },
   "type": "module"
 }

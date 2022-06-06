@@ -8,4 +8,5 @@ declare global
 }
 
 export default Pencilfloor;
+
 export * from './pencilfloor';

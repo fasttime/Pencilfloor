@@ -155,4 +155,5 @@ function ()
     const list = this.isConnected && areAncestorsDisplayed(this) && !this.hidden ? [{ }] : [];
     return list;
 };
+delete global.Event;
 Object.setPrototypeOf(global, window);

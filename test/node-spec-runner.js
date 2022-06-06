@@ -7,15 +7,9 @@ import './dom-emulation.js';
 import chai                 from 'chai';
 import glob                 from 'glob';
 import Mocha                from 'mocha';
-import { dirname }          from 'path';
-import { fileURLToPath }    from 'url';
-import { promisify }        from 'util';
-
-function testExecArgv(regExp)
-{
-    const returnValue = process.execArgv.some(arg => regExp.test(arg));
-    return returnValue;
-}
+import { dirname }          from 'node:path';
+import { fileURLToPath }    from 'node:url';
+import { promisify }        from 'node:util';
 
 (async () =>
 {
@@ -26,8 +20,10 @@ function testExecArgv(regExp)
     const files = await promisify(glob)('*.spec.js', { cwd: __dirname, nodir: true });
     mocha.suite.emit('pre-require', global, null, mocha);
     {
-        const debug = testExecArgv(/^--inspect-brk(?![^=])/);
-        mocha.enableTimeouts(!debug);
+        const { url } = await import('node:inspector');
+        const inspectorUrl = url();
+        if (inspectorUrl)
+            Mocha.Runnable.prototype.timeout = (...args) => args.length ? undefined : 0;
     }
     const urls = files.map(file => new URL(file, currentUrl));
     for (const url of urls)

@@ -52,7 +52,8 @@ function createInteractiveIframe()
     const iframe = createElement('IFRAME');
     if (iframe.contentDocument.readyState !== 'uninitialized')
         return iframe;
-    const promise = new Promise(resolve => setTimeout(() => resolve(iframe)));
+    const executor = resolve => setTimeout(() => resolve(iframe));
+    const promise = new Promise(executor);
     return promise;
 }
 
